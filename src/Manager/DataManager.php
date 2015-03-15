@@ -28,7 +28,7 @@ class DataManager
      */
     public function getGrandPrix()
     {
-        return $this->formula1Provider->fetchGrandPrixResultURLs();
+        return $this->formula1Provider->getGrandPrixResultUrls();
     }
 
     /**

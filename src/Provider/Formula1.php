@@ -101,12 +101,15 @@ class Formula1 extends BaseProvider
         foreach ($rows as $row) {
             /**@var \DomElement $row */
 
-            $pilot = $row->getElementsByTagName('td')->item(1)->textContent;
+            $pilot = trim($row->getElementsByTagName('td')->item(1)->textContent);
+            $team = $row->getElementsByTagName('td')->item(2)->textContent;
 
             $results[$this->hash($pilot)] = [
                 'position' => $row->getElementsByTagName('td')->item(0)->textContent,
                 'pilot'    => $pilot,
-                'team'     => $row->getElementsByTagName('td')->item(2)->textContent,
+                'hash'     => $this->hash($pilot),
+                'team'     => $team,
+                'engine'   => $this->getTeamEngine($team),
             ];
         }
 
@@ -131,12 +134,15 @@ class Formula1 extends BaseProvider
 
             $pilotNameBlock = $row->getElementsByTagName('td')->item(1);
 
-            $pilot = $pilotNameBlock->childNodes->item(1)->textContent . $pilotNameBlock->childNodes->item(3)->textContent;
+            $pilot = trim($pilotNameBlock->childNodes->item(1)->textContent . $pilotNameBlock->childNodes->item(3)->textContent);
+            $team = trim($row->getElementsByTagName('td')->item(3)->textContent);
 
             $results[$this->hash($pilot)] = [
                 'position' => trim($row->getElementsByTagName('td')->item(0)->textContent),
                 'pilot'    => $pilot,
-                'team'     => trim($row->getElementsByTagName('td')->item(3)->textContent),
+                'hash'     => $this->hash($pilot),
+                'team'     => $team,
+                'engine'   => $this->getTeamEngine($team),
             ];
         }
 
@@ -207,11 +213,12 @@ class Formula1 extends BaseProvider
         $this->drivers = [];
 
         $figures->each(function (Crawler $item, $key) {
-            $pilot = $item->filterXPath('//h1')->first()->text();
+            $pilot = trim($item->filterXPath('//h1')->first()->text());
 
             $this->drivers[$this->hash($pilot)] = [
                 'number'   => $item->filterXPath('//figcaption/div[@class="driver-number"]/span')->first()->text(),
                 'fullname' => $pilot,
+                'hash'     => $this->hash($pilot),
                 'photo'    => self::HOST_URL . str_replace('img.1920', 'img.320', $item->filterXPath('//img/@src')->first()->text()),
                 'team'     => $item->filterXPath('//figcaption/p[@class="driver-team"]/span')->first()->text(),
             ];
@@ -296,6 +303,19 @@ class Formula1 extends BaseProvider
     /*
      * Helpers
      */
+
+    /**
+     * @param $team
+     *
+     * @return bool
+     */
+    protected function getTeamEngine($team)
+    {
+        return !empty($this->engines[$team])
+            ? $this->engines[$team]
+            : false
+        ;
+    }
 
     /**
      * @param $stage

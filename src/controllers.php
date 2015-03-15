@@ -11,6 +11,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 $app['app.manager.data'] = function() {
     return new \Manager\DataManager();
 };
+$app['app.manager.points'] = function() {
+    return new \Manager\PointsManager();
+};
 
 $app
     ->get('/', function () use ($app) {
@@ -19,6 +22,13 @@ $app
         $teams     = $app['app.manager.data']->getTeams();
         $engines   = $app['app.manager.data']->getEngines();
 
+        $points = $app['app.manager.points']->getStagePoints(array_shift($grandPrix), [
+            'pilot1' => array_shift($drivers),
+            'pilot2' => array_shift($drivers),
+            'team'   => array_shift($teams),
+            'engine' => array_shift($engines),
+        ]);
+        dump($points);
         return $app['twig']->render('index.html.twig', [
             'grandPrix' => $grandPrix,
             'drivers'   => $drivers,
