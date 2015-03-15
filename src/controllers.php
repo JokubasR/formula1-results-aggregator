@@ -15,9 +15,15 @@ $app['app.manager.data'] = function() {
 $app
     ->get('/', function () use ($app) {
         $grandPrix = $app['app.manager.data']->getGrandPrix();
+        $drivers   = $app['app.manager.data']->getDrivers();
+        $teams     = $app['app.manager.data']->getTeams();
+        $engines   = $app['app.manager.data']->getEngines();
 
         return $app['twig']->render('index.html.twig', [
             'grandPrix' => $grandPrix,
+            'drivers'   => $drivers,
+            'teams'     => $teams,
+            'engines'   => $engines,
         ]);
     })
     ->bind('homepage')

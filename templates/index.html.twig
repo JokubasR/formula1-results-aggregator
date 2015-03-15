@@ -9,4 +9,42 @@
         <a href="{{ path('stage_race_results', {slug: item.slug}) }}">R {{ item.title }}</a>
     {% endfor %}
 
+    <br/>
+    <ul>
+        {% for item in drivers %}
+            <li>
+                <div>
+                    <img src="{{ item.photo }}" alt="{{ item.fullname }}"/>
+                    <h3>{{ item.fullname }} <small>{{ item.number }}</small></h3>
+                    <p>
+                        <strong>Team</strong>: {{ item.team }}
+                    </p>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <ul>
+        {% for item in teams %}
+            <li>
+                <div>
+                    <img src="{{ item.photo }}" alt="{{ item.title }}" width="126"/>
+                    <h3>{{ item.title }}</h3>
+                    <p>
+                        <strong>Engine</strong>: {{ item.engine }}
+                    </p>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <ul>
+        {% for item in engines %}
+            <li>
+                <div>
+                    <h3>{{ item }}</h3>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
 {% endblock %}

@@ -56,6 +56,30 @@ class DataManager
     }
 
     /**
+     * @return array
+     */
+    public function getDrivers()
+    {
+        return $this->formula1Provider->getDriversData();
+    }
+
+    /**
+     * @return array
+     */
+    public function getTeams()
+    {
+        return $this->formula1Provider->getTeams();
+    }
+
+    /**
+     * @return array
+     */
+    public function getEngines()
+    {
+        return $this->formula1Provider->getEngines();
+    }
+
+    /**
      * @param $stageName
      *
      * @return array|bool
