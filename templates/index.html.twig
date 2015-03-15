@@ -1,0 +1,12 @@
+{% extends "layout.html.twig" %}
+
+{% block content %}
+    Welcome to your new Silex Application!
+
+    Grand prix:
+    {% for item in grandPrix %}
+        <a href="{{ path('stage_qualifying_results', {slug: item.slug}) }}">Q {{ item.title }}</a>
+        <a href="{{ path('stage_race_results', {slug: item.slug}) }}">R {{ item.title }}</a>
+    {% endfor %}
+
+{% endblock %}

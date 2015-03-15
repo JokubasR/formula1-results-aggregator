@@ -8,10 +8,41 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 //Request::setTrustedProxies(array('127.0.0.1'));
 
-$app->get('/', function () use ($app) {
-    return $app['twig']->render('index.html', array());
-})
-->bind('homepage')
+$app['app.manager.data'] = function() {
+    return new \Manager\DataManager();
+};
+
+$app
+    ->get('/', function () use ($app) {
+        $grandPrix = $app['app.manager.data']->getGrandPrix();
+
+        return $app['twig']->render('index.html.twig', [
+            'grandPrix' => $grandPrix,
+        ]);
+    })
+    ->bind('homepage')
+;
+
+$app
+    ->get('/{slug}/qualifying', function($slug) use ($app) {
+        $result = $app['app.manager.data']->getGrandPrixQualifyingResult($slug);
+
+        return $app['twig']->render('qualifying.html.twig', [
+            'result' => $result,
+        ]);
+    })
+    ->bind('stage_qualifying_results')
+;
+
+$app
+    ->get('/{slug}/race', function($slug) use ($app) {
+        $result = $app['app.manager.data']->getGrandPrixRaceResult($slug);
+
+        return $app['twig']->render('race.html.twig', [
+            'result' => $result,
+        ]);
+    })
+    ->bind('stage_race_results')
 ;
 
 $app->error(function (\Exception $e, Request $request, $code) use ($app) {
