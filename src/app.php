@@ -6,6 +6,7 @@ use Silex\Provider\RoutingServiceProvider;
 use Silex\Provider\ValidatorServiceProvider;
 use Silex\Provider\ServiceControllerServiceProvider;
 use Silex\Provider\HttpFragmentServiceProvider;
+use Beryllium\SilexCacheProvider\SilexCacheProvider;
 
 $app = new Application();
 $app->register(new RoutingServiceProvider());
@@ -22,5 +23,11 @@ $app['twig'] = $app->extend('twig', function ($twig, $app) {
 
     return $twig;
 });
+
+$app->register(new SilexCacheProvider(),[
+        'be_cache.type' => 'filecache',
+        'be_cache.path' => __DIR__ . '/../var/cache/'
+    ]
+);
 
 return $app;

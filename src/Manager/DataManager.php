@@ -6,6 +6,8 @@
 namespace Manager;
 
 
+use Beryllium\Cache\Cache;
+
 /**
  * Class DataManager
  * @package Manager
@@ -15,12 +17,17 @@ class DataManager
     /** @var  \Provider\Formula1 */
     protected $formula1Provider;
 
+    /** @var \Beryllium\Cache\Cache */
+    protected $cacheProvider;
+
     /**
-     * Constructor
+     * @param \Beryllium\Cache\Cache $cacheClient
      */
-    public function __construct()
+    public function __construct(Cache $cacheClient)
     {
-        $this->formula1Provider = new \Provider\Formula1();
+        $this->cacheProvider = $cacheClient;
+
+        $this->formula1Provider = new \Provider\Formula1($cacheClient);
     }
 
     /**

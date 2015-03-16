@@ -8,11 +8,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 //Request::setTrustedProxies(array('127.0.0.1'));
 
-$app['app.manager.data'] = function() {
-    return new \Manager\DataManager();
+$app['app.manager.data'] = function() use ($app) {
+    return new \Manager\DataManager($app['be_cache']);
 };
-$app['app.manager.points'] = function() {
-    return new \Manager\PointsManager();
+$app['app.manager.points'] = function() use ($app) {
+    return new \Manager\PointsManager($app['be_cache']);
 };
 
 $app
@@ -22,13 +22,13 @@ $app
         $teams     = $app['app.manager.data']->getTeams();
         $engines   = $app['app.manager.data']->getEngines();
 
-        $points = $app['app.manager.points']->getStagePoints(array_shift($grandPrix), [
-            'pilot1' => array_shift($drivers),
-            'pilot2' => array_shift($drivers),
-            'team'   => array_shift($teams),
-            'engine' => array_shift($engines),
-        ]);
-        dump($points);
+//        $points = $app['app.manager.points']->getStagePoints(array_shift($grandPrix), [
+//            'pilot1' => array_shift($drivers),
+//            'pilot2' => array_shift($drivers),
+//            'team'   => array_shift($teams),
+//            'engine' => array_shift($engines),
+//        ]);
+//        dump($points);
         return $app['twig']->render('index.html.twig', [
             'grandPrix' => $grandPrix,
             'drivers'   => $drivers,

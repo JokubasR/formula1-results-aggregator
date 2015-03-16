@@ -4,6 +4,9 @@
  * @since    2015-03-15
  */
 namespace Provider;
+
+
+use Beryllium\Cache\Client\ClientInterface;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
@@ -24,6 +27,14 @@ class Formula1 extends BaseProvider
 
     const DRIVERS_URL = "/content/fom-website/en/championship/drivers.html";
 
+    const CACHE_KEY_GRAND_PRIX_RESULT_URLS = "GRAND_PRIX_RESULT_URLS";
+    const CACHE_KEY_DRIVERS_DATA = "DRIVERS_DATA";
+    const CACHE_KEY_QUALIFYING_RESULTS = "QUALIFYING_RESULTS_";
+    const CACHE_KEY_RACE_RESULTS = "RACE_RESULTS_";
+
+    /** @var \Beryllium\Cache\Cache  */
+    protected $cacheClient;
+
     /**
      * Contains all the available Grand Prix result URLs
      *
@@ -41,13 +52,85 @@ class Formula1 extends BaseProvider
     protected $engines;
 
     /**
-     * Initializes constructor
+     * @param \Beryllium\Cache\Cache $cacheClient
      */
-    public function __construct()
+    public function __construct(\Beryllium\Cache\Cache $cacheClient)
     {
+        $this->cacheClient = $cacheClient;
+
         $this->fetchGrandPrixResultURLs();
         $this->fetchDriversData();
     }
+
+    /**
+     * @return array
+     */
+    public function getDriversData()
+    {
+        $cacheResults = $this->cacheClient->get(self::CACHE_KEY_DRIVERS_DATA);
+
+        if (false === $cacheResults) {
+            $this->fetchDriversData();
+        } else {
+            $this->drivers = $cacheResults;
+        }
+
+        return $this->drivers;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTeams()
+    {
+        $this->fetchTeams();
+
+        return $this->teams;
+    }
+
+    /**
+     * @return array
+     */
+    public function getEngines()
+    {
+        $this->fetchEngines();
+
+        return $this->engines;
+    }
+
+    /**
+     * @param $raceName
+     *
+     * @return array|bool
+     */
+    public function getRaceByName($raceName)
+    {
+        $raceHash = $this->hash($raceName);
+
+        return !empty($this->races[$raceHash])
+            ? $this->races[$raceHash]
+            : false;
+    }
+
+    /**
+     * @return array
+     */
+    public function getGrandPrixResultUrls()
+    {
+        $cacheResults = $this->cacheClient->get(self::CACHE_KEY_GRAND_PRIX_RESULT_URLS);
+
+        if (false === $cacheResults) {
+            $this->fetchGrandPrixResultURLs();
+        } else {
+            $this->races = $cacheResults;
+        }
+
+        return $this->races;
+    }
+
+    /*
+     * Fetchers
+     */
 
     /**
      * @return array
@@ -71,18 +154,10 @@ class Formula1 extends BaseProvider
                 'slug' => strtolower(str_replace(' ', '-', $title)),
             ]);
         }
-    }
 
-    /**
-     * @return array
-     */
-    public function getGrandPrixResultUrls()
-    {
-        if (true /*cache invalid*/) {
-            $this->fetchGrandPrixResultURLs();
+        if (!empty($this->races)) {
+            $this->cacheClient->set(self::CACHE_KEY_GRAND_PRIX_RESULT_URLS, $this->races, 2592000 /*30 days*/);
         }
-
-        return $this->races;
     }
 
     /**
@@ -92,25 +167,34 @@ class Formula1 extends BaseProvider
      */
     public function fetchGrandPrixQualifyingResult(array $stage)
     {
-        $crawler = $this->getData($this->getQualifyingResultUrl($stage));
+        $results = $this->cacheClient->get(self::CACHE_KEY_QUALIFYING_RESULTS . $stage['url']);
 
-        $rows = $crawler->filterXPath('//tr[position() != last()][position() != 1]');
+        if (false === $results) {
 
-        $results = [];
+            $crawler = $this->getData($this->getQualifyingResultUrl($stage));
 
-        foreach ($rows as $row) {
-            /**@var \DomElement $row */
+            $rows = $crawler->filterXPath('//tr[position() != last()][position() != 1]');
 
-            $pilot = trim($row->getElementsByTagName('td')->item(1)->textContent);
-            $team = $row->getElementsByTagName('td')->item(2)->textContent;
+            $results = [];
 
-            $results[$this->hash($pilot)] = [
-                'position' => $row->getElementsByTagName('td')->item(0)->textContent,
-                'pilot'    => $pilot,
-                'hash'     => $this->hash($pilot),
-                'team'     => $team,
-                'engine'   => $this->getTeamEngine($team),
-            ];
+            foreach ($rows as $row) {
+                /**@var \DomElement $row */
+
+                $pilot = trim($row->getElementsByTagName('td')->item(1)->textContent);
+                $team = $row->getElementsByTagName('td')->item(2)->textContent;
+
+                $results[$this->hash($pilot)] = [
+                    'position' => $row->getElementsByTagName('td')->item(0)->textContent,
+                    'pilot'    => $pilot,
+                    'hash'     => $this->hash($pilot),
+                    'team'     => $team,
+                    'engine'   => $this->getTeamEngine($team),
+                ];
+            }
+
+            if (!empty($results)) {
+                $this->cacheClient->set(self::CACHE_KEY_QUALIFYING_RESULTS . $stage['url'], $results, 120 /*2 minutes*/);
+            }
         }
 
         return $results;
@@ -123,82 +207,39 @@ class Formula1 extends BaseProvider
      */
     public function fetchGrandPrixRaceResult(array $stage)
     {
-        $crawler = $this->getData($this->getRaceResultUrl($stage));
+        $results = $this->cacheClient->get(self::CACHE_KEY_RACE_RESULTS . $stage['url']);
 
-        $rows = $crawler->filterXPath('//tr[position() != 1]');
+        if (false === $results) {
 
-        $results = [];
+            $crawler = $this->getData($this->getRaceResultUrl($stage));
 
-        foreach ($rows as $row) {
-            /**@var \DomElement $row */
+            $rows = $crawler->filterXPath('//tr[position() != 1]');
 
-            $pilotNameBlock = $row->getElementsByTagName('td')->item(1);
+            $results = [];
 
-            $pilot = trim($pilotNameBlock->childNodes->item(1)->textContent . $pilotNameBlock->childNodes->item(3)->textContent);
-            $team = trim($row->getElementsByTagName('td')->item(3)->textContent);
+            foreach ($rows as $row) {
+                /**@var \DomElement $row */
 
-            $results[$this->hash($pilot)] = [
-                'position' => trim($row->getElementsByTagName('td')->item(0)->textContent),
-                'pilot'    => $pilot,
-                'hash'     => $this->hash($pilot),
-                'team'     => $team,
-                'engine'   => $this->getTeamEngine($team),
-            ];
+                $pilotNameBlock = $row->getElementsByTagName('td')->item(1);
+
+                $pilot = trim($pilotNameBlock->childNodes->item(1)->textContent . $pilotNameBlock->childNodes->item(3)->textContent);
+                $team = trim($row->getElementsByTagName('td')->item(3)->textContent);
+
+                $results[$this->hash($pilot)] = [
+                    'position' => trim($row->getElementsByTagName('td')->item(0)->textContent),
+                    'pilot'    => $pilot,
+                    'hash'     => $this->hash($pilot),
+                    'team'     => $team,
+                    'engine'   => $this->getTeamEngine($team),
+                ];
+            }
+
+            if (!empty($results)) {
+                $this->cacheClient->set(self::CACHE_KEY_RACE_RESULTS . $stage['url'], $results, 120 /*2 minutes*/);
+            }
         }
 
         return $results;
-    }
-
-
-    /**
-     * @return array
-     */
-    public function getDriversData()
-    {
-        if (true /*cache invalid*/) {
-            $this->fetchDriversData();
-        }
-
-        return $this->drivers;
-    }
-
-    /**
-     * @return array
-     */
-    public function getTeams()
-    {
-        if (true /*cache invalid*/) {
-            $this->fetchTeams();
-        }
-
-        return $this->teams;
-    }
-
-    /**
-     * @return array
-     */
-    public function getEngines()
-    {
-        if (true /*cache invalid*/) {
-            $this->fetchEngines();
-        }
-
-        return $this->engines;
-    }
-
-    /**
-     * @param $raceName
-     *
-     * @return array|bool
-     */
-    public function getRaceByName($raceName)
-    {
-        $raceHash = $this->hash($raceName);
-
-        return !empty($this->races[$raceHash])
-            ? $this->races[$raceHash]
-            : false
-        ;
     }
 
     /**
@@ -223,6 +264,10 @@ class Formula1 extends BaseProvider
                 'team'     => $item->filterXPath('//figcaption/p[@class="driver-team"]/span')->first()->text(),
             ];
         });
+
+        if (!empty($this->drivers)) {
+            $this->cacheClient->set(self::CACHE_KEY_DRIVERS_DATA, $this->drivers, 2592000 /*30 days*/);
+        }
     }
 
     /**

@@ -22,6 +22,9 @@ class PointsManager
     /** @var  \Provider\Formula1 */
     protected $formula1Provider;
 
+    /** @var \Beryllium\Cache\Cache */
+    protected $cacheClient;
+
     /**
      * Place => points
      * @var array
@@ -58,11 +61,13 @@ class PointsManager
 
 
     /**
-     * Constructor
+     * @param \Beryllium\Cache\Cache $cacheClient
      */
-    public function __construct()
+    public function __construct(\Beryllium\Cache\Cache $cacheClient)
     {
-        $this->formula1Provider = new \Provider\Formula1();
+        $this->cacheClient = $cacheClient;
+
+        $this->formula1Provider = new \Provider\Formula1($cacheClient);
     }
 
     /**

@@ -4,8 +4,103 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "35394b17d2ec5727875ec765cb8c8e87",
+    "hash": "7b2742febda88e0dcceffb929179e02f",
     "packages": [
+        {
+            "name": "beryllium/cache",
+            "version": "dev-master",
+            "target-dir": "Beryllium/Cache",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/beryllium/cache.git",
+                "reference": "b51068afe0ac2bc2ee31fdc43a31827abe668e08"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/beryllium/cache/zipball/b51068afe0ac2bc2ee31fdc43a31827abe668e08",
+                "reference": "b51068afe0ac2bc2ee31fdc43a31827abe668e08",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "mikey179/vfsstream": "1.2.*",
+                "phpunit/phpunit": "~3.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Beryllium\\Cache": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kevin Boyd (aka Beryllium)",
+                    "homepage": "http://whateverthing.com/"
+                },
+                {
+                    "name": "Jeremy Livingston",
+                    "homepage": "http://github.com/jeremylivingston"
+                },
+                {
+                    "name": "Nechaev Yaroslav",
+                    "homepage": "http://github.com/Remper"
+                }
+            ],
+            "description": "Provides a PHP interface to numerous caching implementations",
+            "keywords": [
+                "apc",
+                "cache",
+                "memcache",
+                "memcached"
+            ],
+            "time": "2013-11-28 05:06:40"
+        },
+        {
+            "name": "beryllium/silex-cache-provider",
+            "version": "dev-master",
+            "target-dir": "Beryllium/SilexCacheProvider",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/beryllium/silex-cache-provider.git",
+                "reference": "63c3c659a6facf2cc9a052fc11a4396c98071d84"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/beryllium/silex-cache-provider/zipball/63c3c659a6facf2cc9a052fc11a4396c98071d84",
+                "reference": "63c3c659a6facf2cc9a052fc11a4396c98071d84",
+                "shasum": ""
+            },
+            "require": {
+                "beryllium/cache": "*",
+                "php": ">5.3.8",
+                "silex/silex": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Beryllium\\SilexCacheProvider": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kevin Boyd",
+                    "email": "kevin.boyd@gmail.com",
+                    "homepage": "http://www.beryllium.ca/"
+                }
+            ],
+            "description": "A cache provider for Silex, supporting Memcache, APC, and file-based caching.",
+            "time": "2013-11-28 10:06:14"
+        },
         {
             "name": "monolog/monolog",
             "version": "1.13.1",
@@ -1879,13 +1974,14 @@
     ],
     "packages-dev": [],
     "aliases": [],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "stability-flags": {
         "silex/silex": 20,
         "silex/web-profiler": 20,
-        "symfony/var-dumper": 20
+        "symfony/var-dumper": 20,
+        "beryllium/silex-cache-provider": 20
     },
-    "prefer-stable": false,
+    "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": ">=5.3.3"

@@ -33,4 +33,4 @@
 # Composer PHAR
 /composer.phar
 
-/.idea/*
+.idea/
