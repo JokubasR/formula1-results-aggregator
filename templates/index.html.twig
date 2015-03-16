@@ -1,50 +1,90 @@
 {% extends "layout.html.twig" %}
 
 {% block content %}
-    Welcome to your new Silex Application!
+    <!-- Sidebar -->
+    <div id="sidebar-wrapper">
+        <div class="[ col-xs-12 ]">
+            <ul class="event-list">
+                {% for item in grandPrix %}
+                    <li>
+                        <time datetime="{{ item.date }}">
+                            <span class="day">{{ item.date[:-3] }}</span>
+                            <span class="month">{{ item.date[-3:] }}</span>
+                        </time>
+                        <img alt="{{ item.title }}" src="{{ item.photo }}">
 
-    Grand prix:
-    {% for item in grandPrix %}
-        <a href="{{ path('stage_qualifying_results', {slug: item.slug}) }}">Q {{ item.title }}</a>
-        <a href="{{ path('stage_race_results', {slug: item.slug}) }}">R {{ item.title }}</a>
-    {% endfor %}
+                        <div class="info">
+                            <h2 class="title">{{ item.shortName }}</h2>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <!-- /#sidebar-wrapper -->
 
-    <br/>
-    <ul>
-        {% for item in drivers %}
-            <li>
-                <div>
-                    <img src="{{ item.photo }}" alt="{{ item.fullname }}"/>
-                    <h3>{{ item.fullname }} <small>{{ item.number }}</small></h3>
-                    <p>
-                        <strong>Team</strong>: {{ item.team }}
-                    </p>
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1>Simple Sidebar</h1>
+
+                    <p>This template has a responsive menu toggling system. The menu will appear collapsed on smaller
+                        screens, and will appear non-collapsed on larger screens. When toggled using the button below,
+                        the menu will appear/disappear. On small screens, the page content will be pushed off
+                        canvas.</p>
+
+                    <p>Make sure to keep all page content within the <code>#page-content-wrapper</code>.</p>
+                    <a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Toggle Menu</a>
                 </div>
-            </li>
-        {% endfor %}
-    </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /#page-content-wrapper -->
 
-    <ul>
-        {% for item in teams %}
-            <li>
-                <div>
-                    <img src="{{ item.photo }}" alt="{{ item.title }}" width="126"/>
-                    <h3>{{ item.title }}</h3>
-                    <p>
-                        <strong>Engine</strong>: {{ item.engine }}
-                    </p>
-                </div>
-            </li>
-        {% endfor %}
-    </ul>
+    {#Grand prix:#}
+    {#{% for item in grandPrix %}#}
+        {#<a href="{{ path('stage_qualifying_results', {slug: item.slug}) }}">Q {{ item.title }}</a>#}
+        {#<a href="{{ path('stage_race_results', {slug: item.slug}) }}">R {{ item.title }}</a>#}
+    {#{% endfor %}#}
 
-    <ul>
-        {% for item in engines %}
-            <li>
-                <div>
-                    <h3>{{ item }}</h3>
-                </div>
-            </li>
-        {% endfor %}
-    </ul>
+    {#<br/>#}
+    {#<ul>#}
+        {#{% for item in drivers %}#}
+            {#<li>#}
+                {#<div>#}
+                    {#<img src="{{ item.photo }}" alt="{{ item.fullname }}"/>#}
+                    {#<h3>{{ item.fullname }} <small>{{ item.number }}</small></h3>#}
+                    {#<p>#}
+                        {#<strong>Team</strong>: {{ item.team }}#}
+                    {#</p>#}
+                {#</div>#}
+            {#</li>#}
+        {#{% endfor %}#}
+    {#</ul>#}
+
+    {#<ul>#}
+        {#{% for item in teams %}#}
+            {#<li>#}
+                {#<div>#}
+                    {#<img src="{{ item.photo }}" alt="{{ item.title }}" width="126"/>#}
+                    {#<h3>{{ item.title }}</h3>#}
+                    {#<p>#}
+                        {#<strong>Engine</strong>: {{ item.engine }}#}
+                    {#</p>#}
+                {#</div>#}
+            {#</li>#}
+        {#{% endfor %}#}
+    {#</ul>#}
+
+    {#<ul>#}
+        {#{% for item in engines %}#}
+            {#<li>#}
+                {#<div>#}
+                    {#<h3>{{ item }}</h3>#}
+                {#</div>#}
+            {#</li>#}
+        {#{% endfor %}#}
+    {#</ul>#}
 {% endblock %}

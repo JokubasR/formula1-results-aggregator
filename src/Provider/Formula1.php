@@ -19,6 +19,8 @@ class Formula1 extends BaseProvider
 
     const RESULTS_BASE_URL = "/content/fom-website/en/championship/results/";
 
+    const RACES_URL = "/content/fom-website/en/championship/races/2015.html";
+
     const RACE_RESULTS_URL = "2015-race-results.html";
 
     const QUALIFYING_SITE = '/qualifying.html';
@@ -28,6 +30,7 @@ class Formula1 extends BaseProvider
     const DRIVERS_URL = "/content/fom-website/en/championship/drivers.html";
 
     const CACHE_KEY_GRAND_PRIX_RESULT_URLS = "GRAND_PRIX_RESULT_URLS";
+    const CACHE_KEY_GRAND_PRIX = "GRAND_PRIX";
     const CACHE_KEY_DRIVERS_DATA = "DRIVERS_DATA";
     const CACHE_KEY_QUALIFYING_RESULTS = "QUALIFYING_RESULTS_";
     const CACHE_KEY_RACE_RESULTS = "RACE_RESULTS_";
@@ -41,6 +44,13 @@ class Formula1 extends BaseProvider
      * @var array
      */
     protected $races;
+
+    /**
+     * Contains grand prix date, title, photos. Does'nt include result data.
+     *
+     * @var array
+     */
+    protected $racesInfo;
 
     /** @var  array */
     protected $drivers;
@@ -128,6 +138,22 @@ class Formula1 extends BaseProvider
         return $this->races;
     }
 
+    /**
+     * @return array|mixed
+     */
+    public function getGrandPrix()
+    {
+        $cacheResults = $this->cacheClient->get(self::CACHE_KEY_GRAND_PRIX);
+
+//        if (false === $cacheResults) {
+            $this->fetchGrandPrix();
+//        } else {
+//            $this->racesInfo = $cacheResults;
+//        }
+
+        return $this->racesInfo;
+    }
+
     /*
      * Fetchers
      */
@@ -143,20 +169,52 @@ class Formula1 extends BaseProvider
 
         $this->races = [];
 
-        foreach ($grandPrix as $race) {
-            /**@var \DomElement $race */
-
-            $title = $race->getElementsByTagName('h4')->item(0)->textContent;
+        $grandPrix->each(function (Crawler $race, $key) {
+            $title = $race->filterXPath('//h4')->text();
 
             $this->addRaceInfo([
-                'url'   => $race->getElementsByTagName('a')->item(0)->attributes->getNamedItem('href')->textContent,
+                'url'   => $race->filterXPath('//a/@href')->text(),
                 'title' => $title,
-                'slug' => strtolower(str_replace(' ', '-', $title)),
+                'slug'  => strtolower(str_replace(' ', '-', $title)),
+                'photo' => $race->filterXPath('//img[@class="hidden"]/@src')->text(),
             ]);
-        }
+        });
 
         if (!empty($this->races)) {
-            $this->cacheClient->set(self::CACHE_KEY_GRAND_PRIX_RESULT_URLS, $this->races, 2592000 /*30 days*/);
+            $this->cacheClient->set(self::CACHE_KEY_GRAND_PRIX_RESULT_URLS, $this->races, 172800 /*2 days*/);
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function fetchGrandPrix()
+    {
+        $crawler = $this->getData($this->getRacesUrl());
+
+        $grandPrix = $crawler->filterXPath('//article[contains(@class, "fom-teaser")]');
+
+        $this->racesInfo = [];
+
+        $grandPrix->each(function (Crawler $race, $key) {
+            $title = $race->filterXPath('//section/h4')->text();
+            $slug = strtolower(str_replace(' ', '-', $title));
+            $photo = $race->filterXPath('//img[@class="hidden"]/@src')->text();
+            $date = explode('-', trim($race->filterXPath('//section/p[@class="teaser-date"]')->text()));
+            $dateString = sprintf('%s-%s', trim(str_replace(' ', null, $date[0]), " \t\n\r\0\x0BOct"), trim($date[1]));
+
+            $this->racesInfo[$this->hash($slug)] = [
+                'title' => $title,
+                'shortName' => str_replace('2015 FORMULA 1 ', null, $title),
+                'slug'  => $slug,
+                'photo' => self::HOST_URL . $photo,
+                'fullSizePhoto' => self::HOST_URL . str_replace('img.320', 'img.1920', $photo),
+                'date' => $dateString,
+            ];
+        });
+
+        if (!empty($this->racesInfo)) {
+            $this->cacheClient->set(self::CACHE_KEY_GRAND_PRIX, $this->racesInfo, 2592000 /*30 days*/);
         }
     }
 
@@ -253,7 +311,7 @@ class Formula1 extends BaseProvider
 
         $this->drivers = [];
 
-        $figures->each(function (Crawler $item, $key) {
+        $figures->each(function(Crawler $item, $key) {
             $pilot = trim($item->filterXPath('//h1')->first()->text());
 
             $this->drivers[$this->hash($pilot)] = [
@@ -414,5 +472,13 @@ class Formula1 extends BaseProvider
     protected function getBaseResultsUrl()
     {
         return self::HOST_URL. self::RESULTS_BASE_URL;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getRacesUrl()
+    {
+        return self::HOST_URL . self::RACES_URL;
     }
 }
