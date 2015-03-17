@@ -9,7 +9,33 @@
 @import url("http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,400italic");
 @import url("//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css");
 
+body {
+    color: #fff;
+    font-family: 'Open Sans', Arial, Helvetica, Sans-Serif;
+}
+
+.background-image {
+    background: url('http://s.bootply.com/assets/64531/green_suburb.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    display: block;
+    filter: blur(5px);
+    -webkit-filter: blur(5px);
+    height: 100%;
+    left: 0;
+    position: fixed;
+    right: 0;
+    z-index: 1;
+}
+
+.slimScrollDiv{
+    overflow: visible !important;
+}
+
 #wrapper {
+    z-index: 2;
     padding-left: 0;
     -webkit-transition: all 0.5s ease;
     -moz-transition: all 0.5s ease;
@@ -28,12 +54,13 @@
     width: 0;
     height: 100%;
     margin-left: -500px;
-    overflow-y: auto;
-    background: #000;
+    overflow-y: hidden;
+    background: rgba(0, 0, 0, 0.3);
     -webkit-transition: all 0.5s ease;
     -moz-transition: all 0.5s ease;
     -o-transition: all 0.5s ease;
     transition: all 0.5s ease;
+    color: #303030;
 }
 
 #wrapper.toggled #sidebar-wrapper {
@@ -44,6 +71,7 @@
     width: 100%;
     position: absolute;
     padding: 15px;
+    z-index: 2;
 }
 
 #wrapper.toggled #page-content-wrapper {
@@ -110,6 +138,9 @@
 
     #sidebar-wrapper {
         width: 500px;
+    }
+    .slimScrollBar{
+        right: 500px !important;
     }
 
     #wrapper.toggled #sidebar-wrapper {
