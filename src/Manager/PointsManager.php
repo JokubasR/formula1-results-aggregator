@@ -1,14 +1,14 @@
 <?php
 /**
  * @author   Jokūbas Ramanauskas
+ *
  * @since    2015-03-15
  */
 
 namespace Manager;
 
 /**
- * Class PointsManager
- * @package Manager
+ * Class PointsManager.
  */
 class PointsManager
 {
@@ -26,7 +26,8 @@ class PointsManager
     protected $cacheClient;
 
     /**
-     * Place => points
+     * Place => points.
+     *
      * @var array
      */
     protected $pointsForQualifying = array(
@@ -41,7 +42,8 @@ class PointsManager
     );
 
     /**
-     * Place => points
+     * Place => points.
+     *
      * @var array
      */
     protected $pointsForRace = array(
@@ -59,7 +61,6 @@ class PointsManager
         12 => 1,
     );
 
-
     /**
      * @param \Beryllium\Cache\Cache $cacheClient
      */
@@ -75,6 +76,7 @@ class PointsManager
      * @param array $team
      *
      * @return array|bool
+     *
      * @throws \Exception
      */
     public function getStagePoints(array $stage, array $team)
@@ -109,6 +111,7 @@ class PointsManager
      * @param       $mode
      *
      * @return array
+     *
      * @throws \Exception
      */
     public function getCalculatedPoints(array $results, array $firstPilot, array $secondPilot, array $team, $engine, $mode)
@@ -118,13 +121,13 @@ class PointsManager
         } else {
             throw new \Exception(sprintf("Pilot %s not found", $firstPilot['fullname']));
         }
-        
+
         if (!empty($results[$secondPilot['hash']])) {
             $secondPilotData = $results[$secondPilot['hash']];
         } else {
             throw new \Exception(sprintf("Pilot %s not found", $secondPilot['fullname']));
         }
-        
+
         $points = [
             'pilot1' => $this->getPilotPoints($firstPilotData['position'], $mode),
             'pilot2' => $this->getPilotPoints($secondPilotData['position'], $mode),
@@ -133,11 +136,10 @@ class PointsManager
         ];
 
         foreach ($results as $pilot) {
-            
             if ($pilot['team'] === $team['title']) {
                 $points['team'] += $this->getTeamPoints($pilot['position'], $mode);
             }
-            
+
             if ($pilot['engine'] === $engine) {
                 $points['engine'] += $this->getEnginePoints($pilot['position'], $mode);
             }

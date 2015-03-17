@@ -24,9 +24,9 @@ $app['twig'] = $app->extend('twig', function ($twig, $app) {
     return $twig;
 });
 
-$app->register(new SilexCacheProvider(),[
+$app->register(new SilexCacheProvider(), [
         'be_cache.type' => 'filecache',
-        'be_cache.path' => __DIR__ . '/../var/cache/'
+        'be_cache.path' => __DIR__.'/../var/cache/',
     ]
 );
 

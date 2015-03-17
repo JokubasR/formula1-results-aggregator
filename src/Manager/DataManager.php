@@ -1,18 +1,18 @@
 <?php
 /**
  * @author   Jokūbas Ramanauskas
+ *
  * @since    2015-03-15
  */
-namespace Manager;
 
+namespace Manager;
 
 use Beryllium\Cache\Cache;
 
 /**
- * Class DataManager
- * @package Manager
+ * Class DataManager.
  */
-class DataManager 
+class DataManager
 {
     /** @var  \Provider\Formula1 */
     protected $formula1Provider;

@@ -1,17 +1,16 @@
 <?php
 /**
  * @author   Jokūbas Ramanauskas
+ *
  * @since    2015-03-15
  */
+
 namespace Provider;
 
-
-use Beryllium\Cache\Client\ClientInterface;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
- * Class Formula1
- * @package Provider
+ * Class Formula1.
  */
 class Formula1 extends BaseProvider
 {
@@ -39,7 +38,7 @@ class Formula1 extends BaseProvider
     protected $cacheClient;
 
     /**
-     * Contains all the available Grand Prix result URLs
+     * Contains all the available Grand Prix result URLs.
      *
      * @var array
      */
@@ -163,7 +162,7 @@ class Formula1 extends BaseProvider
      */
     public function fetchGrandPrixResultURLs()
     {
-        $crawler = $this->getData($this->getBaseResultsUrl() . self::RACE_RESULTS_URL);
+        $crawler = $this->getData($this->getBaseResultsUrl().self::RACE_RESULTS_URL);
 
         $grandPrix = $crawler->filterXPath('//div[@class="group article-columns"]');
 
@@ -207,8 +206,8 @@ class Formula1 extends BaseProvider
                 'title' => $title,
                 'shortName' => str_replace('2015 FORMULA 1 ', null, $title),
                 'slug'  => $slug,
-                'photo' => self::HOST_URL . $photo,
-                'fullSizePhoto' => self::HOST_URL . str_replace('img.320', 'img.1920', $photo),
+                'photo' => self::HOST_URL.$photo,
+                'fullSizePhoto' => self::HOST_URL.str_replace('img.320', 'img.1920', $photo),
                 'date' => $dateString,
             ];
         });
@@ -225,10 +224,9 @@ class Formula1 extends BaseProvider
      */
     public function fetchGrandPrixQualifyingResult(array $stage)
     {
-        $results = $this->cacheClient->get(self::CACHE_KEY_QUALIFYING_RESULTS . $stage['url']);
+        $results = $this->cacheClient->get(self::CACHE_KEY_QUALIFYING_RESULTS.$stage['url']);
 
         if (false === $results) {
-
             $crawler = $this->getData($this->getQualifyingResultUrl($stage));
 
             $rows = $crawler->filterXPath('//tr[position() != last()][position() != 1]');
@@ -251,7 +249,7 @@ class Formula1 extends BaseProvider
             }
 
             if (!empty($results)) {
-                $this->cacheClient->set(self::CACHE_KEY_QUALIFYING_RESULTS . $stage['url'], $results, 120 /*2 minutes*/);
+                $this->cacheClient->set(self::CACHE_KEY_QUALIFYING_RESULTS.$stage['url'], $results, 120 /*2 minutes*/);
             }
         }
 
@@ -265,10 +263,9 @@ class Formula1 extends BaseProvider
      */
     public function fetchGrandPrixRaceResult(array $stage)
     {
-        $results = $this->cacheClient->get(self::CACHE_KEY_RACE_RESULTS . $stage['url']);
+        $results = $this->cacheClient->get(self::CACHE_KEY_RACE_RESULTS.$stage['url']);
 
         if (false === $results) {
-
             $crawler = $this->getData($this->getRaceResultUrl($stage));
 
             $rows = $crawler->filterXPath('//tr[position() != 1]');
@@ -280,7 +277,7 @@ class Formula1 extends BaseProvider
 
                 $pilotNameBlock = $row->getElementsByTagName('td')->item(1);
 
-                $pilot = trim($pilotNameBlock->childNodes->item(1)->textContent . $pilotNameBlock->childNodes->item(3)->textContent);
+                $pilot = trim($pilotNameBlock->childNodes->item(1)->textContent.$pilotNameBlock->childNodes->item(3)->textContent);
                 $team = trim($row->getElementsByTagName('td')->item(3)->textContent);
 
                 $results[$this->hash($pilot)] = [
@@ -293,7 +290,7 @@ class Formula1 extends BaseProvider
             }
 
             if (!empty($results)) {
-                $this->cacheClient->set(self::CACHE_KEY_RACE_RESULTS . $stage['url'], $results, 120 /*2 minutes*/);
+                $this->cacheClient->set(self::CACHE_KEY_RACE_RESULTS.$stage['url'], $results, 120 /*2 minutes*/);
             }
         }
 
@@ -301,7 +298,7 @@ class Formula1 extends BaseProvider
     }
 
     /**
-     * Fetches drivers data
+     * Fetches drivers data.
      */
     protected function fetchDriversData()
     {
@@ -311,14 +308,14 @@ class Formula1 extends BaseProvider
 
         $this->drivers = [];
 
-        $figures->each(function(Crawler $item, $key) {
+        $figures->each(function (Crawler $item, $key) {
             $pilot = trim($item->filterXPath('//h1')->first()->text());
 
             $this->drivers[$this->hash($pilot)] = [
                 'number'   => $item->filterXPath('//figcaption/div[@class="driver-number"]/span')->first()->text(),
                 'fullname' => $pilot,
                 'hash'     => $this->hash($pilot),
-                'photo'    => self::HOST_URL . str_replace('img.1920', 'img.320', $item->filterXPath('//img/@src')->first()->text()),
+                'photo'    => self::HOST_URL.str_replace('img.1920', 'img.320', $item->filterXPath('//img/@src')->first()->text()),
                 'team'     => $item->filterXPath('//figcaption/p[@class="driver-team"]/span')->first()->text(),
             ];
         });
@@ -329,7 +326,7 @@ class Formula1 extends BaseProvider
     }
 
     /**
-     * Fetches teams data
+     * Fetches teams data.
      */
     protected function fetchTeams()
     {
@@ -337,61 +334,61 @@ class Formula1 extends BaseProvider
             'Mercedes'    => [
                 'title'  => 'Mercedes',
                 'engine' => 'Mercedes',
-                'photo'  => self::HOST_URL . '/content/fom-website/en/championship/teams/Mercedes/_jcr_content/teamCar.img.jpg',
+                'photo'  => self::HOST_URL.'/content/fom-website/en/championship/teams/Mercedes/_jcr_content/teamCar.img.jpg',
             ],
             'Ferrari'     => [
                 'title'  => 'Ferrari',
                 'engine' => 'Ferrari',
-                'photo'  => self::HOST_URL . '/content/fom-website/en/championship/teams/Ferrari/_jcr_content/teamCar.img.jpg',
+                'photo'  => self::HOST_URL.'/content/fom-website/en/championship/teams/Ferrari/_jcr_content/teamCar.img.jpg',
             ],
             'Williams'    => [
                 'title'  => 'Williams',
                 'engine' => 'Mercedes',
-                'photo'  => self::HOST_URL . '/content/fom-website/en/championship/teams/Williams/_jcr_content/teamCar.img.jpg',
+                'photo'  => self::HOST_URL.'/content/fom-website/en/championship/teams/Williams/_jcr_content/teamCar.img.jpg',
             ],
             'Sauber'      => [
                 'title'  => 'Sauber',
                 'engine' => 'Ferrari',
-                'photo'  => self::HOST_URL . '/etc/designs/fom-website/images/driver-standings/default.gif',
+                'photo'  => self::HOST_URL.'/etc/designs/fom-website/images/driver-standings/default.gif',
                 //@TODO change
             ],
             'Red Bull'    => [
                 'title'  => 'Red Bull',
                 'engine' => 'Renault',
-                'photo'  => self::HOST_URL . '/content/fom-website/en/championship/teams/Red-Bull/_jcr_content/teamCar.img.jpg',
+                'photo'  => self::HOST_URL.'/content/fom-website/en/championship/teams/Red-Bull/_jcr_content/teamCar.img.jpg',
             ],
             'Force India' => [
                 'title'  => 'Force India',
                 'engine' => 'Mercedes',
-                'photo'  => self::HOST_URL . '/content/fom-website/en/championship/teams/Force-India/_jcr_content/teamCar.img.jpg',
+                'photo'  => self::HOST_URL.'/content/fom-website/en/championship/teams/Force-India/_jcr_content/teamCar.img.jpg',
             ],
             'Toro Rosso'  => [
                 'title'  => 'Toro Rosso',
                 'engine' => 'Renault',
-                'photo'  => self::HOST_URL . '/content/fom-website/en/championship/teams/Toro-Rosso/_jcr_content/teamCar.img.jpg',
+                'photo'  => self::HOST_URL.'/content/fom-website/en/championship/teams/Toro-Rosso/_jcr_content/teamCar.img.jpg',
             ],
             'McLaren'     => [
                 'title'  => 'McLaren',
                 'engine' => 'Honda',
-                'photo'  => self::HOST_URL . '/content/fom-website/en/championship/teams/McLaren/_jcr_content/teamCar.img.jpg',
+                'photo'  => self::HOST_URL.'/content/fom-website/en/championship/teams/McLaren/_jcr_content/teamCar.img.jpg',
             ],
             'Lotus'       => [
                 'title'  => 'Lotus',
                 'engine' => 'Mercedes',
-                'photo'  => self::HOST_URL . '/etc/designs/fom-website/images/driver-standings/default.gif',
+                'photo'  => self::HOST_URL.'/etc/designs/fom-website/images/driver-standings/default.gif',
                 //@TODO change
             ],
             'Marussia'    => [
                 'title'  => 'Marussia',
                 'engine' => 'Ferrari',
-                'photo'  => self::HOST_URL . '/etc/designs/fom-website/images/driver-standings/default.gif',
+                'photo'  => self::HOST_URL.'/etc/designs/fom-website/images/driver-standings/default.gif',
                 //@TODO change
             ],
         ];
     }
 
     /**
-     * Fetches engines data
+     * Fetches engines data.
      */
     protected function fetchEngines()
     {
@@ -427,7 +424,7 @@ class Formula1 extends BaseProvider
      */
     protected function getQualifyingResultUrl($stage)
     {
-        return self::HOST_URL .  substr($stage['url'], 0, -5) . self::QUALIFYING_SITE;
+        return self::HOST_URL.substr($stage['url'], 0, -5).self::QUALIFYING_SITE;
     }
 
     /**
@@ -437,7 +434,7 @@ class Formula1 extends BaseProvider
      */
     protected function getRaceResultUrl($stage)
     {
-        return self::HOST_URL .  substr($stage['url'], 0, -5) . self::RACE_SITE;
+        return self::HOST_URL.substr($stage['url'], 0, -5).self::RACE_SITE;
     }
 
     /**
@@ -463,7 +460,7 @@ class Formula1 extends BaseProvider
      */
     protected function getDriversUrl()
     {
-        return self::HOST_URL . self::DRIVERS_URL;
+        return self::HOST_URL.self::DRIVERS_URL;
     }
 
     /**
@@ -471,7 +468,7 @@ class Formula1 extends BaseProvider
      */
     protected function getBaseResultsUrl()
     {
-        return self::HOST_URL. self::RESULTS_BASE_URL;
+        return self::HOST_URL.self::RESULTS_BASE_URL;
     }
 
     /**
@@ -479,6 +476,6 @@ class Formula1 extends BaseProvider
      */
     protected function getRacesUrl()
     {
-        return self::HOST_URL . self::RACES_URL;
+        return self::HOST_URL.self::RACES_URL;
     }
 }

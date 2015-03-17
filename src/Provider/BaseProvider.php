@@ -1,17 +1,16 @@
 <?php
 /**
  * @author   Jokūbas Ramanauskas
+ *
  * @since    2015-03-15
  */
 
 namespace Provider;
 
-
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
- * Class BaseProvider
- * @package Provider
+ * Class BaseProvider.
  */
 abstract class BaseProvider
 {

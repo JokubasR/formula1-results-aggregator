@@ -2,16 +2,13 @@
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 //Request::setTrustedProxies(array('127.0.0.1'));
 
-$app['app.manager.data'] = function() use ($app) {
+$app['app.manager.data'] = function () use ($app) {
     return new \Manager\DataManager($app['be_cache']);
 };
-$app['app.manager.points'] = function() use ($app) {
+$app['app.manager.points'] = function () use ($app) {
     return new \Manager\PointsManager($app['be_cache']);
 };
 
@@ -40,7 +37,7 @@ $app
 ;
 
 $app
-    ->get('/{slug}/qualifying', function($slug) use ($app) {
+    ->get('/{slug}/qualifying', function ($slug) use ($app) {
         $result = $app['app.manager.data']->getGrandPrixQualifyingResult($slug);
 
         return $app['twig']->render('qualifying.html.twig', [
@@ -51,7 +48,7 @@ $app
 ;
 
 $app
-    ->get('/{slug}/race', function($slug) use ($app) {
+    ->get('/{slug}/race', function ($slug) use ($app) {
         $result = $app['app.manager.data']->getGrandPrixRaceResult($slug);
 
         return $app['twig']->render('race.html.twig', [
