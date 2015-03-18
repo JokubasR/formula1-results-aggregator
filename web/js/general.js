@@ -43,7 +43,7 @@ $(function() {
         });
 
     $('.event-list>li').click(function(e){
-        var $target = $(e.target);
+        var $target = $(this);
 
         $('.background-image').css('background-image', "url('" + $target.data('background') + "')");
         $('#race-title').html($target.data('title'));
