@@ -202,13 +202,16 @@ class Formula1 extends BaseProvider
             $date = explode('-', trim($race->filterXPath('//section/p[@class="teaser-date"]')->text()));
             $dateString = sprintf('%s-%s', trim(str_replace(' ', null, $date[0]), " \t\n\r\0\x0BOct"), trim($date[1]));
 
-            $this->racesInfo[$this->hash($slug)] = [
+            $hash = $this->hash($slug);
+
+            $this->racesInfo[$hash] = [
                 'title' => $title,
                 'shortName' => str_replace('2015 FORMULA 1 ', null, $title),
                 'slug'  => $slug,
                 'photo' => self::HOST_URL.$photo,
                 'fullSizePhoto' => self::HOST_URL.str_replace('img.320', 'img.1024', $photo),
                 'date' => $dateString,
+                'hash' => $hash,
             ];
         });
 
@@ -393,10 +396,10 @@ class Formula1 extends BaseProvider
     protected function fetchEngines()
     {
         $this->engines = [
-            'Mercedes',
-            'Ferrari',
-            'Renault',
-            'Honda',
+            'Mercedes' => 'Mercedes',
+            'Ferrari'  => 'Ferrari',
+            'Renault'  => 'Renault',
+            'Honda'    => 'Honda',
         ];
     }
 

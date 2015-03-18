@@ -57,17 +57,15 @@ $app
     ->bind('stage_race_results')
 ;
     $app
-        ->post('/{slug}/result', function ($slug) use ($app) {
+        ->post('/{slug}/result', function (Request $request, $slug) use ($app) {
 
-            /* @todo handle request */
-
-            $grandPrix = [];
-            $team = [
-                'pilot1' => '',
-                'pilot2' => '',
-                'team'   => '',
-                'engine' => '',
-            ];
+            $grandPrix = $app['app.manager.data']->getStageByName($slug);
+            $team = $app['app.manager.data']->getTeamByHashes(
+                $request->request->get('pilot1'),
+                $request->request->get('pilot2'),
+                $request->request->get('team'),
+                $request->request->get('engine')
+            );
 
             $result = $app['app.manager.points']->getStagePoints($grandPrix, $team);
 

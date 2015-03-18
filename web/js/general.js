@@ -1,3 +1,23 @@
+if (!String.prototype.format) {
+    String.prototype.format = function () {
+        var args = arguments;
+        return this.replace(/{(\d+)}/g, function (match, number) {
+            return typeof args[number] != 'undefined'
+                ? args[number]
+                : match
+                ;
+        });
+    };
+}
+
+toggle_button_loading_text = function($element){
+    var btnText = $element.data('loading-text');
+    $element
+        .data('loading-text', $element.text())
+        .data('loading-text', btnText)
+    ;
+};
+
 $(function() {
     $('#sidebar-wrapper').slimscroll({
         height: '100%',
@@ -16,14 +36,44 @@ $(function() {
             width: '170px'
         })
         .change(function(e){
-            $target = $(e.target);
-            $img = $target.parents('.row:first').find('img');
+            var $target = $(e.target);
+            var $img = $target.parents('.row:first').find('img');
 
             $img.attr('src', $target.children('option:selected').data('photo'));
         });
 
     $('.event-list>li').click(function(e){
-        $('.background-image').css('background-image', "url('" + $(this).data('background') + "')");
-        $('#race-title').html($(this).data('title'));
+        var $target = $(e.target);
+
+        $('.background-image').css('background-image', "url('" + $target.data('background') + "')");
+        $('#race-title').html($target.data('title'));
+        $('input[name="stage"]').val($target.data('slug'));
+    });
+
+    $('*[data-event="ajaxRequest"]').click(function(e){
+        e.preventDefault();
+
+        var $target = $(e.target);
+        var $container = $($target.data('container'));
+        var $resultContainer = $($target.data('result-container'));
+        var $form = $($target).parents('form:first');
+
+        $.ajax({
+            async: true,
+            type: $form.attr('method'),
+            url: decodeURI($form.attr('action')).format($('input[name="stage"]').val()),
+            data: $form.serialize(),
+            beforeSend: function(){
+                toggle_button_loading_text($target);
+            },
+            success: function(data){
+                if (data.status === "ok") {
+                    $container.show();
+                    $resultContainer.html(data.view);
+
+                    toggle_button_loading_text($target);
+                }
+            }
+        });
     });
 });

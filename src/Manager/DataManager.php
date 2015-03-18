@@ -97,11 +97,29 @@ class DataManager
     }
 
     /**
+     * @param string $pilot1Hash
+     * @param string $pilot2Hash
+     * @param string $teamHash
+     * @param string $engineHash
+     *
+     * @return array
+     */
+    public function getTeamByHashes($pilot1Hash, $pilot2Hash, $teamHash, $engineHash)
+    {
+        return [
+            'pilot1' => $this->getDrivers()[$pilot1Hash],
+            'pilot2' => $this->getDrivers()[$pilot2Hash],
+            'team' => $this->getTeams()[$teamHash],
+            'engine' => $this->getEngines()[$engineHash],
+        ];
+    }
+
+    /**
      * @param $stageName
      *
      * @return array|bool
      */
-    protected function getStageByName($stageName)
+    public function getStageByName($stageName)
     {
         return $this->formula1Provider->getRaceByName($stageName);
     }
