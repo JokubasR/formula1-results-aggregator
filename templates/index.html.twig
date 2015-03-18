@@ -118,52 +118,118 @@
                     </div>
                 </div>
             </div>
+
+            <div class="row top15">
+                <div class="col-md-offset-1 col-fhd-8 col-md-10 col-sm-12">
+
+                    <div class="row">
+                        <div class="section col-md-5 col-xs-12">
+                            <h3>Results</h3>
+                            <div class="media">
+                                <div class="media-left">
+                                    <a href="#">
+                                        <img class="media-object" src="{{ drivers|first.photo }}" alt="" width="64" height="64">
+                                    </a>
+                                </div>
+                                <div class="media-body">
+                                    <h4 class="media-heading">Felipe Massa</h4>
+                                    <p>Qualifying: 18</p>
+                                    <p>Race: 18</p>
+                                </div>
+                            </div>
+                            <div class="media">
+                                <div class="media-left">
+                                    <a href="#">
+                                        <img class="media-object" src="{{ drivers|last.photo }}" alt="" width="64" height="64">
+                                    </a>
+                                </div>
+                                <div class="media-body">
+                                    <h4 class="media-heading">Fernando Alonso</h4>
+                                    <p>Qualifying: 18</p>
+                                    <p>Race: 18</p>
+                                </div>
+                            </div>
+                            <div class="media">
+                                <div class="media-left">
+                                    <a href="#">
+                                        <img class="media-object" src="{{ teams|first.photo }}" alt="" width="64" height="64">
+                                    </a>
+                                </div>
+                                <div class="media-body">
+                                    <h4 class="media-heading">Ferrari</h4>
+                                    <p>Qualifying: 18</p>
+                                    <p>Race: 18</p>
+                                </div>
+                            </div>
+                            <div class="media">
+                                <div class="media-left">
+                                    <a href="#">
+                                        <img class="media-object" src="{{ drivers|first.photo }}" alt="" width="64" height="64">
+                                    </a>
+                                </div>
+                                <div class="media-body">
+                                    <h4 class="media-heading">Ferrari</h4>
+                                    <p>Qualifying: 18</p>
+                                    <p>Race: 18</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="section col-md-offset-2 col-md-5 col-xs-12">
+                            <h3>Best team</h3>
+
+                            <div class="media">
+                                <div class="media-left">
+                                    <a href="#">
+                                        <img class="media-object" src="{{ drivers|first.photo }}" alt="" width="64" height="64">
+                                    </a>
+                                </div>
+                                <div class="media-body">
+                                    <h4 class="media-heading">Felipe Massa</h4>
+                                    <p>Qualifying: 18</p>
+                                    <p>Race: 18</p>
+                                </div>
+                            </div>
+                            <div class="media">
+                                <div class="media-left">
+                                    <a href="#">
+                                        <img class="media-object" src="{{ drivers|last.photo }}" alt="" width="64" height="64">
+                                    </a>
+                                </div>
+                                <div class="media-body">
+                                    <h4 class="media-heading">Fernando Alonso</h4>
+                                    <p>Qualifying: 18</p>
+                                    <p>Race: 18</p>
+                                </div>
+                            </div>
+                            <div class="media">
+                                <div class="media-left">
+                                    <a href="#">
+                                        <img class="media-object" src="{{ teams|first.photo }}" alt="" width="64" height="64">
+                                    </a>
+                                </div>
+                                <div class="media-body">
+                                    <h4 class="media-heading">Ferrari</h4>
+                                    <p>Qualifying: 18</p>
+                                    <p>Race: 18</p>
+                                </div>
+                            </div>
+                            <div class="media">
+                                <div class="media-left">
+                                    <a href="#">
+                                        <img class="media-object" src="{{ drivers|first.photo }}" alt="" width="64" height="64">
+                                    </a>
+                                </div>
+                                <div class="media-body">
+                                    <h4 class="media-heading">Ferrari</h4>
+                                    <p>Qualifying: 18</p>
+                                    <p>Race: 18</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <!-- /#page-content-wrapper -->
-
-    {#Grand prix:#}
-    {#{% for item in grandPrix %}#}
-        {#<a href="{{ path('stage_qualifying_results', {slug: item.slug}) }}">Q {{ item.title }}</a>#}
-        {#<a href="{{ path('stage_race_results', {slug: item.slug}) }}">R {{ item.title }}</a>#}
-    {#{% endfor %}#}
-
-    {#<br/>#}
-    {#<ul>#}
-        {#{% for item in drivers %}#}
-            {#<li>#}
-                {#<div>#}
-                    {#<img src="{{ item.photo }}" alt="{{ item.fullname }}"/>#}
-                    {#<h3>{{ item.fullname }} <small>{{ item.number }}</small></h3>#}
-                    {#<p>#}
-                        {#<strong>Team</strong>: {{ item.team }}#}
-                    {#</p>#}
-                {#</div>#}
-            {#</li>#}
-        {#{% endfor %}#}
-    {#</ul>#}
-
-    {#<ul>#}
-        {#{% for item in teams %}#}
-            {#<li>#}
-                {#<div>#}
-                    {#<img src="{{ item.photo }}" alt="{{ item.title }}" width="126"/>#}
-                    {#<h3>{{ item.title }}</h3>#}
-                    {#<p>#}
-                        {#<strong>Engine</strong>: {{ item.engine }}#}
-                    {#</p>#}
-                {#</div>#}
-            {#</li>#}
-        {#{% endfor %}#}
-    {#</ul>#}
-
-    {#<ul>#}
-        {#{% for item in engines %}#}
-            {#<li>#}
-                {#<div>#}
-                    {#<h3>{{ item }}</h3>#}
-                {#</div>#}
-            {#</li>#}
-        {#{% endfor %}#}
-    {#</ul>#}
 {% endblock %}
