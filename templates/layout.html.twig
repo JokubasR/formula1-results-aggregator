@@ -12,6 +12,7 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
 
         <link href="{{ asset('plugins/select2/css/select2.min.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('plugins/select2/css/select2-bootstrap.css') }}" rel="stylesheet" type="text/css" />
         <link href="{{ asset('css/main.css') }}" rel="stylesheet" type="text/css" />
 
         <script type="text/javascript">
@@ -28,7 +29,7 @@
     </head>
     <body>
 
-    <div class="background-image"></div>
+    <div class="background-image" style="background-image: url('{{ current_race.fullSizePhoto }}');"></div>
     <div id="wrapper">
         {% block content %}{% endblock %}
     </div>

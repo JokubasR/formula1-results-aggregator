@@ -14,12 +14,22 @@ $app->register(new ValidatorServiceProvider());
 $app->register(new ServiceControllerServiceProvider());
 $app->register(new TwigServiceProvider());
 $app->register(new HttpFragmentServiceProvider());
-$app['twig'] = $app->extend('twig', function ($twig, $app) {
+
+$app['app.manager.data']   = function () use ($app) {
+    return new \Manager\DataManager($app['be_cache']);
+};
+$app['app.manager.points'] = function () use ($app) {
+    return new \Manager\PointsManager($app['be_cache']);
+};
+
+$app['twig'] = $app->extend('twig', function (Twig_Environment $twig, $app) {
     // add custom globals, filters, tags, ...
 
     $twig->addFunction(new \Twig_SimpleFunction('asset', function ($asset) use ($app) {
         return $app['request_stack']->getMasterRequest()->getBasepath().'/'.$asset;
     }));
+
+    $twig->addGlobal('current_race', $app['app.manager.data']->getCurrentRace());
 
     return $twig;
 });

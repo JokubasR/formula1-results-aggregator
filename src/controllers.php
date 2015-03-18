@@ -5,13 +5,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 //Request::setTrustedProxies(array('127.0.0.1'));
 
-$app['app.manager.data'] = function () use ($app) {
-    return new \Manager\DataManager($app['be_cache']);
-};
-$app['app.manager.points'] = function () use ($app) {
-    return new \Manager\PointsManager($app['be_cache']);
-};
-
 $app
     ->get('/', function () use ($app) {
         $grandPrix = $app['app.manager.data']->getGrandPrix();
@@ -31,6 +24,12 @@ $app
             'drivers'   => $drivers,
             'teams'     => $teams,
             'engines'   => $engines,
+            'team' => [
+                'pilot1' => array_shift($drivers),
+                'pilot2' => array_shift($drivers),
+                'team'   => array_shift($teams),
+                'engine' => array_shift($engines),
+            ],
         ]);
     })
     ->bind('homepage')
@@ -57,6 +56,29 @@ $app
     })
     ->bind('stage_race_results')
 ;
+    $app
+        ->post('/{slug}/result', function ($slug) use ($app) {
+
+            /* @todo handle request */
+
+            $grandPrix = [];
+            $team = [
+                'pilot1' => '',
+                'pilot2' => '',
+                'team'   => '',
+                'engine' => '',
+            ];
+
+            $result = $app['app.manager.points']->getStagePoints($grandPrix, $team);
+
+            return new \Symfony\Component\HttpFoundation\JsonResponse([
+                'status' => 'ok',
+                'view' => $app['twig']->render('result.html.twig', [
+                    'result' => $result,
+                ])
+            ]);
+        })
+        ->bind('stage_results');
 
 $app->error(function (\Exception $e, Request $request, $code) use ($app) {
     if ($app['debug']) {

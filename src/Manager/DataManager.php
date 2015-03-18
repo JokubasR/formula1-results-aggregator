@@ -87,6 +87,16 @@ class DataManager
     }
 
     /**
+     * @return mixed
+     */
+    public function getCurrentRace()
+    {
+        $races = $this->formula1Provider->getGrandPrix();
+
+        return array_shift($races);
+    }
+
+    /**
      * @param $stageName
      *
      * @return array|bool

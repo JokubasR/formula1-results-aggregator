@@ -207,7 +207,7 @@ class Formula1 extends BaseProvider
                 'shortName' => str_replace('2015 FORMULA 1 ', null, $title),
                 'slug'  => $slug,
                 'photo' => self::HOST_URL.$photo,
-                'fullSizePhoto' => self::HOST_URL.str_replace('img.320', 'img.1920', $photo),
+                'fullSizePhoto' => self::HOST_URL.str_replace('img.320', 'img.1024', $photo),
                 'date' => $dateString,
             ];
         });
@@ -315,7 +315,7 @@ class Formula1 extends BaseProvider
                 'number'   => $item->filterXPath('//figcaption/div[@class="driver-number"]/span')->first()->text(),
                 'fullname' => $pilot,
                 'hash'     => $this->hash($pilot),
-                'photo'    => self::HOST_URL.str_replace('img.1920', 'img.320', $item->filterXPath('//img/@src')->first()->text()),
+                'photo'    => self::HOST_URL.str_replace('img.1920', 'img.140', $item->filterXPath('//img/@src')->first()->text()),
                 'team'     => $item->filterXPath('//figcaption/p[@class="driver-team"]/span')->first()->text(),
             ];
         });
