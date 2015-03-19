@@ -14,7 +14,7 @@ toggle_button_loading_text = function($element){
     var btnText = $element.data('loading-text');
     $element
         .data('loading-text', $element.text())
-        .data('loading-text', btnText)
+        .text(btnText)
     ;
 };
 
