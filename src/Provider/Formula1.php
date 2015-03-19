@@ -406,10 +406,22 @@ class Formula1 extends BaseProvider
     protected function fetchEngines()
     {
         $this->engines = [
-            'Mercedes' => 'Mercedes',
-            'Ferrari'  => 'Ferrari',
-            'Renault'  => 'Renault',
-            'Honda'    => 'Honda',
+            'Mercedes' => [
+                'title' => 'Mercedes',
+                'photo' => self::HOST_URL . '/content/fom-website/en/championship/teams/Mercedes/_jcr_content/logo.img.png/1425652811221.png',
+            ],
+            'Ferrari'  => [
+                'title' => 'Ferrari',
+                'photo' => self::HOST_URL . '/content/fom-website/en/championship/teams/Ferrari/_jcr_content/logo.img.png/1424035994766.png',
+            ],
+            'Renault'  => [
+                'title' => 'Renault',
+                'photo' => 'http://upload.wikimedia.org/wikipedia/commons/2/2d/Logo_Renault_Sport_F1.png',
+            ],
+            'Honda'    => [
+                'title' => 'Honda',
+                'photo' => self::HOST_URL . '/content/fom-website/en/championship/teams/McLaren/_jcr_content/logo.img.png/1424036219966.png',
+            ],
         ];
     }
 

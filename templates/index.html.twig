@@ -98,13 +98,13 @@
                                             <label for="engine">Engine</label>
                                         </div>
                                         <div class="col-xs-12" style="height: 160px;">
-                                            <img src="{{ team.team.photo }}" alt="{{ team.engine }}" class="img-rounded" width="140" height="140" style="padding-top: 40px; ">
+                                            <img src="{{ team.engine.photo }}" alt="{{ team.engine.title }}" class="img-rounded" width="140" height="140" style="padding-top: 40px; ">
                                         </div>
                                         <div class="col-xs-12">
                                             <select name="engine" id="engine" data-placeholder="Select engine" tabindex="4">
                                                 {% for item in engines %}
-                                                    <option value="{{ item }}" data-photo="{{ item.photo|default }}">
-                                                        {{ item }}
+                                                    <option value="{{ item.title }}" data-photo="{{ item.photo|default }}">
+                                                        {{ item.title }}
                                                     </option>
                                                 {% endfor %}
                                             </select>
