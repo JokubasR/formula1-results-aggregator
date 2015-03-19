@@ -58,7 +58,7 @@ body {
     height: 100%;
     margin-left: -200px;
     overflow-y: hidden;
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(25, 25, 25, 0.3);
     -webkit-transition: all 0.5s ease;
     -moz-transition: all 0.5s ease;
     -o-transition: all 0.5s ease;
@@ -393,7 +393,7 @@ body {
 }
 
 .section{
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(25, 25, 25, 0.3);
     padding: 5px;
 }
 

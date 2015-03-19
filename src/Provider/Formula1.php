@@ -67,8 +67,10 @@ class Formula1 extends BaseProvider
     {
         $this->cacheClient = $cacheClient;
 
-        $this->fetchGrandPrixResultURLs();
-        $this->fetchDriversData();
+        $this->getGrandPrixResultUrls();
+        $this->getDriversData();
+        $this->getTeams();
+        $this->getEngines();
     }
 
     /**
@@ -144,11 +146,11 @@ class Formula1 extends BaseProvider
     {
         $cacheResults = $this->cacheClient->get(self::CACHE_KEY_GRAND_PRIX);
 
-//        if (false === $cacheResults) {
+        if (false === $cacheResults) {
             $this->fetchGrandPrix();
-//        } else {
-//            $this->racesInfo = $cacheResults;
-//        }
+        } else {
+            $this->racesInfo = $cacheResults;
+        }
 
         return $this->racesInfo;
     }

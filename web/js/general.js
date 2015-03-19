@@ -11,6 +11,7 @@ if (!String.prototype.format) {
 }
 
 toggle_button_loading_text = function($element){
+
     var btnText = $element.data('loading-text');
     $element
         .data('loading-text', $element.text())
@@ -70,9 +71,8 @@ $(function() {
                 if (data.status === "ok") {
                     $container.show();
                     $resultContainer.html(data.view);
-
-                    toggle_button_loading_text($target);
                 }
+                toggle_button_loading_text($target);
             }
         });
     });

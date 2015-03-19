@@ -12,13 +12,6 @@ $app
         $teams     = $app['app.manager.data']->getTeams();
         $engines   = $app['app.manager.data']->getEngines();
 
-//        $points = $app['app.manager.points']->getStagePoints(array_shift($grandPrix), [
-//            'pilot1' => array_shift($drivers),
-//            'pilot2' => array_shift($drivers),
-//            'team'   => array_shift($teams),
-//            'engine' => array_shift($engines),
-//        ]);
-//        dump($points);
         return $app['twig']->render('index.html.twig', [
             'grandPrix' => $grandPrix,
             'drivers'   => $drivers,
@@ -73,7 +66,8 @@ $app
                 'status' => 'ok',
                 'view' => $app['twig']->render('result.html.twig', [
                     'result' => $result,
-                ])
+                    'team' => $team,
+                ]),
             ]);
         })
         ->bind('stage_results');

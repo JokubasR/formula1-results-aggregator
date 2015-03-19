@@ -1,57 +1,67 @@
-<h3>Results</h3>
-<div class="media">
-    <div class="media-left">
-        <a href="#">
-            <img class="media-object" src="" alt="" width="64" height="64">
-        </a>
-    </div>
-    <div class="media-body">
-        <h4 class="media-heading">Felipe Massa</h4>
+<span class="pull-right label label-info">{{ result.total }} total</span>
+<h3 class="text-uppercase">Results</h3>
+{% if result is not empty %}
 
-        <p>Qualifying: 18</p>
+    <div class="media">
+        <div class="media-left">
+            <a href="#">
+                <img class="media-object" src="{{ team.pilot1.photo }}" alt="" width="64" height="64">
+            </a>
+        </div>
+        <div class="media-body">
+            <span class="pull-right label label-info">{{ result.qualifying.pilot1|default(0) + result.race.pilot1|default(0) }} total</span>
+            <h4 class="media-heading">{{ team.pilot1.fullname }}</h4>
 
-        <p>Race: 18</p>
+            <p>Qualifying: {{ result.qualifying.pilot1|default(0) }}</p>
+            <p>Race: {{ result.race.pilot1|default(0) }}</p>
+        </div>
     </div>
-</div>
-<div class="media">
-    <div class="media-left">
-        <a href="#">
-            <img class="media-object" src="" alt="" width="64" height="64">
-        </a>
-    </div>
-    <div class="media-body">
-        <h4 class="media-heading">Fernando Alonso</h4>
+    <div class="media">
+        <div class="media-left">
+            <a href="#">
+                <img class="media-object" src="{{ team.pilot2.photo }}" alt="" width="64" height="64">
+            </a>
+        </div>
+        <div class="media-body">
+            <span class="pull-right label label-info">{{ result.qualifying.pilot2|default(0) + result.race.pilot2|default(0) }} total</span>
+            <h4 class="media-heading">{{ team.pilot2.fullname }}</h4>
 
-        <p>Qualifying: 18</p>
-
-        <p>Race: 18</p>
+            <p>Qualifying: {{ result.qualifying.pilot2|default(0) }}</p>
+            <p>Race: {{ result.race.pilot2|default(0) }}</p>
+        </div>
     </div>
-</div>
-<div class="media">
-    <div class="media-left">
-        <a href="#">
-            <img class="media-object" src="" alt="" width="64" height="64">
-        </a>
-    </div>
-    <div class="media-body">
-        <h4 class="media-heading">Ferrari</h4>
+    <div class="media">
+        <div class="media-left">
+            <a href="#">
+                <img class="media-object" src="{{ team.team.photo }}" alt="" width="64" height="64">
+            </a>
+        </div>
+        <div class="media-body">
+            <span class="pull-right label label-info">{{ result.qualifying.team|default(0) + result.race.team|default(0) }} total</span>
+            <h4 class="media-heading">{{ team.team.title }}</h4>
 
-        <p>Qualifying: 18</p>
-
-        <p>Race: 18</p>
+            <p>Qualifying: {{ result.qualifying.team|default(0) }}</p>
+            <p>Race: {{ result.race.team|default(0) }}</p>
+        </div>
     </div>
-</div>
-<div class="media">
-    <div class="media-left">
-        <a href="#">
-            <img class="media-object" src="" alt="" width="64" height="64">
-        </a>
-    </div>
-    <div class="media-body">
-        <h4 class="media-heading">Ferrari</h4>
+    <div class="media">
+        <div class="media-left">
+            <a href="#">
+                <img class="media-object" src="{{ team.engine.photo }}" alt="" width="64" height="64">
+            </a>
+        </div>
+        <div class="media-body">
+            <span class="pull-right label label-info">{{ result.qualifying.engine|default(0) + result.race.engine|default(0) }} total</span>
+            <h4 class="media-heading">{{ team.engine.title }}</h4>
 
-        <p>Qualifying: 18</p>
-
-        <p>Race: 18</p>
+            <p>Qualifying: {{ result.qualifying.engine|default(0) }}</p>
+            <p>Race: {{ result.race.engine|default(0) }}</p>
+        </div>
     </div>
-</div>
+
+{% else %}
+    <div class="alert alert-danger" role="alert">
+        <strong>Oh snap!</strong>
+        Results are not available!
+    </div>
+{% endif %}

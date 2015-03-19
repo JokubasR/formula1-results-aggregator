@@ -72,15 +72,19 @@ class PointsManager
     }
 
     /**
-     * @param array $stage
+     * @param array|boolean $stage
      * @param array $team
      *
      * @return array|bool
      *
      * @throws \Exception
      */
-    public function getStagePoints(array $stage, array $team)
+    public function getStagePoints($stage, array $team)
     {
+        if (false === $stage) {
+            return false;
+        }
+
         $results = [];
 
         $qualificationResults = $this->formula1Provider->fetchGrandPrixQualifyingResult($stage);
@@ -88,16 +92,17 @@ class PointsManager
             return false;
         }
 
-        $results['qualification'] = $this->getCalculatedPoints($qualificationResults, $team['pilot1'], $team['pilot2'], $team['team'], $team['engine'], self::MODE_QUALIFYING);
+        $results['qualifying'] = $this->getCalculatedPoints($qualificationResults, $team['pilot1'], $team['pilot2'], $team['team'], $team['engine'], self::MODE_QUALIFYING);
 
         $raceResults = $this->formula1Provider->fetchGrandPrixRaceResult($stage);
         if (empty($raceResults)) {
-            return false;
+            $results['total'] = $results['qualifying']['total'];
+            return $results;
         }
 
         $results['race'] = $this->getCalculatedPoints($raceResults, $team['pilot1'], $team['pilot2'], $team['team'], $team['engine'], self::MODE_RACE);
 
-        $results['total'] = $results['qualification']['total'] + $results['race']['total'];
+        $results['total'] = $results['qualifying']['total'] + $results['race']['total'];
 
         return $results;
     }
@@ -140,7 +145,7 @@ class PointsManager
                 $points['team'] += $this->getTeamPoints($pilot['position'], $mode);
             }
 
-            if ($pilot['engine'] === $engine) {
+            if ($pilot['engine']['title'] === $engine['title']) {
                 $points['engine'] += $this->getEnginePoints($pilot['position'], $mode);
             }
         }
