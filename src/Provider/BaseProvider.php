@@ -22,7 +22,6 @@ abstract class BaseProvider
     protected function getData($url)
     {
         $content = $this->fetchData($url);
-        dump($url);
         $crawler = $this->getDomCrawler($content);
 
         return $crawler;
