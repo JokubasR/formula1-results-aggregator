@@ -337,55 +337,65 @@ class Formula1 extends BaseProvider
             'Mercedes'    => [
                 'title'  => 'Mercedes',
                 'engine' => 'Mercedes',
-                'photo'  => self::HOST_URL.'/content/fom-website/en/championship/teams/Mercedes/_jcr_content/teamCar.img.jpg',
+//                'photo'  => self::HOST_URL.'/content/fom-website/en/championship/teams/Mercedes/_jcr_content/teamCar.img.jpg',
+                'photo'  => self::HOST_URL.'/content/fom-website/en/championship/teams/Mercedes/_jcr_content/logo.img.png/1425652811221.png',
+//                'photo'  => 'http://www.vectorsland.com/imgd/l38759-mercedes-gp-petronas-f1-logo-30998.jpg',
             ],
             'Ferrari'     => [
                 'title'  => 'Ferrari',
                 'engine' => 'Ferrari',
-                'photo'  => self::HOST_URL.'/content/fom-website/en/championship/teams/Ferrari/_jcr_content/teamCar.img.jpg',
+//                'photo'  => self::HOST_URL.'/content/fom-website/en/championship/teams/Ferrari/_jcr_content/teamCar.img.jpg',
+                'photo'  => self::HOST_URL.'/content/fom-website/en/championship/teams/Ferrari/_jcr_content/logo.img.png/1424035994766.png',
+//                'photo'  => 'http://us.wilogo.com/themes/wilogo/images/upload/562113878453.jpg',
             ],
             'Williams'    => [
                 'title'  => 'Williams',
                 'engine' => 'Mercedes',
-                'photo'  => self::HOST_URL.'/content/fom-website/en/championship/teams/Williams/_jcr_content/teamCar.img.jpg',
+//                'photo'  => self::HOST_URL.'/content/fom-website/en/championship/teams/Williams/_jcr_content/teamCar.img.jpg',
+                'photo'  => self::HOST_URL.'/content/fom-website/en/championship/teams/Williams/_jcr_content/logo.img.png/1424034752681.png',
+//                'photo'  => 'https://pbs.twimg.com/profile_images/441547605168771074/SU9DcYVe.jpeg',
             ],
             'Sauber'      => [
                 'title'  => 'Sauber',
                 'engine' => 'Ferrari',
-                'photo'  => self::HOST_URL.'/etc/designs/fom-website/images/driver-standings/default.gif',
-                //@TODO change
+//                'photo'  => self::HOST_URL.'/etc/designs/fom-website/images/driver-standings/default.gif',
+                'photo'  => self::HOST_URL.'/content/fom-website/en/championship/teams/Sauber/_jcr_content/logo.img.png/1424036712372.png',
             ],
             'Red Bull'    => [
                 'title'  => 'Red Bull',
                 'engine' => 'Renault',
-                'photo'  => self::HOST_URL.'/content/fom-website/en/championship/teams/Red-Bull/_jcr_content/teamCar.img.jpg',
+//                'photo'  => self::HOST_URL.'/content/fom-website/en/championship/teams/Red-Bull/_jcr_content/teamCar.img.jpg',
+                'photo'  => self::HOST_URL.'/content/fom-website/en/championship/teams/Red-Bull/_jcr_content/logo.img.png/1424034222158.png',
             ],
             'Force India' => [
                 'title'  => 'Force India',
                 'engine' => 'Mercedes',
-                'photo'  => self::HOST_URL.'/content/fom-website/en/championship/teams/Force-India/_jcr_content/teamCar.img.jpg',
+//                'photo'  => self::HOST_URL.'/content/fom-website/en/championship/teams/Force-India/_jcr_content/teamCar.img.jpg',
+                'photo'  => self::HOST_URL.'/content/fom-website/en/championship/teams/Force-India/_jcr_content/logo.img.png/1424036629759.png',
             ],
             'Toro Rosso'  => [
                 'title'  => 'Toro Rosso',
                 'engine' => 'Renault',
-                'photo'  => self::HOST_URL.'/content/fom-website/en/championship/teams/Toro-Rosso/_jcr_content/teamCar.img.jpg',
+//                'photo'  => self::HOST_URL.'/content/fom-website/en/championship/teams/Toro-Rosso/_jcr_content/teamCar.img.jpg',
+                'photo'  => self::HOST_URL.'/content/fom-website/en/championship/teams/Toro-Rosso/_jcr_content/logo.img.png/1424036670890.png',
             ],
             'McLaren'     => [
                 'title'  => 'McLaren',
                 'engine' => 'Honda',
-                'photo'  => self::HOST_URL.'/content/fom-website/en/championship/teams/McLaren/_jcr_content/teamCar.img.jpg',
+//                'photo'  => self::HOST_URL.'/content/fom-website/en/championship/teams/McLaren/_jcr_content/teamCar.img.jpg',
+                'photo'  => self::HOST_URL.'/content/fom-website/en/championship/teams/McLaren/_jcr_content/logo.img.png/1424036219966.png',
             ],
             'Lotus'       => [
                 'title'  => 'Lotus',
                 'engine' => 'Mercedes',
-                'photo'  => self::HOST_URL.'/etc/designs/fom-website/images/driver-standings/default.gif',
-                //@TODO change
+//                'photo'  => self::HOST_URL.'/etc/designs/fom-website/images/driver-standings/default.gif',
+                'photo'  => self::HOST_URL.'/content/fom-website/en/championship/teams/Lotus/_jcr_content/logo.img.png/1423427335332.png',
             ],
             'Marussia'    => [
                 'title'  => 'Marussia',
                 'engine' => 'Ferrari',
-                'photo'  => self::HOST_URL.'/etc/designs/fom-website/images/driver-standings/default.gif',
-                //@TODO change
+//                'photo'  => self::HOST_URL.'/etc/designs/fom-website/images/driver-standings/default.gif',
+                'photo'  => 'http://www.gp3series.com/webimage/GP3-TeamLogoThumb/Global/GP3/Teams-Logo/Logo_MarussiaManor.png',
             ],
         ];
     }

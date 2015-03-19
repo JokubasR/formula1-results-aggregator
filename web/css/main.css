@@ -38,7 +38,7 @@ body {
 
 .slimScrollDiv{
     overflow: visible !important;
-    width: 200px !important;
+    width: 100px !important;
 }
 
 #wrapper {
@@ -124,75 +124,20 @@ body {
 
 /*@media (min-width: 768px) {*/
     #wrapper {
-        padding-left: 200px;
+        padding-left: 100px;
     }
 
     #sidebar-wrapper {
-        width: 200px !important;
+        width: 100px !important;
     }
     .slimScrollBar{
-        right: 200px !important;
+        right: 100px !important;
     }
 
     #page-content-wrapper {
         padding: 20px;
         position: relative;
     }
-/*}*/
-
-/*@media (min-width: 1200px) {*/
-    /*#wrapper {*/
-        /*padding-top: 20px;*/
-        /*padding-left: 400px;*/
-    /*}*/
-
-    /*#sidebar-wrapper {*/
-        /*width: 400px !important;*/
-    /*}*/
-    /*.slimScrollBar{*/
-        /*right: 400px !important;*/
-    /*}*/
-
-    /*#page-content-wrapper {*/
-        /*padding: 20px;*/
-        /*position: fixed;*/
-    /*}*/
-/*}*/
-
-@media (min-width: 1200px) {
-    #wrapper {
-        padding-top: 20px;
-        padding-left: 500px;
-    }
-
-    #sidebar-wrapper {
-        width: 500px !important;
-        left: 500px;
-        margin-left: -500px;
-    }
-    .slimScrollBar{
-        right: 500px !important;
-    }
-
-    #page-content-wrapper {
-        padding: 20px;
-        /*position: fixed;*/
-    }
-
-    .slimScrollDiv {
-        width: 500px !important;
-    }
-
-}
-
-@media (min-width: 1600px) {
-    .event-list > li > time,
-    .event-list > li > img {
-        display: inline-block;
-    }
-}
-
-
 
 .event-list {
     list-style: none;
@@ -229,14 +174,14 @@ body {
 
 .event-list > li > time > .day {
     display: block;
-    font-size: 32pt;
+    font-size: 16pt;
     font-weight: 100;
     line-height: 1.6;
 }
 
 .event-list > li time > .month {
     display: block;
-    font-size: 24pt;
+    font-size: 12pt;
     font-weight: 900;
     line-height: 1;
 }
@@ -251,7 +196,7 @@ body {
 }
 
 .event-list > li > .info > .title {
-    font-size: 17pt;
+    font-size: 8pt;
     font-weight: 700;
     margin: 0px;
 }
@@ -310,6 +255,72 @@ body {
 .event-list img {
     display: none;
 }
+
+/*}*/
+
+/*@media (min-width: 1200px) {*/
+    /*#wrapper {*/
+        /*padding-top: 20px;*/
+        /*padding-left: 400px;*/
+    /*}*/
+
+    /*#sidebar-wrapper {*/
+        /*width: 400px !important;*/
+    /*}*/
+    /*.slimScrollBar{*/
+        /*right: 400px !important;*/
+    /*}*/
+
+    /*#page-content-wrapper {*/
+        /*padding: 20px;*/
+        /*position: fixed;*/
+    /*}*/
+/*}*/
+
+@media (min-width: 1200px) {
+    #wrapper {
+        padding-top: 20px;
+        padding-left: 500px;
+    }
+
+    #sidebar-wrapper {
+        width: 500px !important;
+        left: 500px;
+        margin-left: -500px;
+    }
+    .slimScrollBar{
+        right: 500px !important;
+    }
+
+    #page-content-wrapper {
+        padding: 20px;
+        /*position: fixed;*/
+    }
+
+    .slimScrollDiv {
+        width: 500px !important;
+    }
+
+    .event-list > li > time > .day {
+        font-size: 32pt;
+    }
+
+    .event-list > li time > .month {
+        font-size: 24pt;
+    }
+
+    .event-list > li > .info > .title {
+        font-size: 17pt;
+    }
+}
+
+@media (min-width: 1600px) {
+    .event-list > li > time,
+    .event-list > li > img {
+        display: inline-block;
+    }
+}
+
 
 @media (min-width: 1200px) {
     .event-list > li {
@@ -397,6 +408,8 @@ body {
     transform: scale(1, 1);
     transition-duration: 0.3s;
     -webkit-transition-duration: 0.3s; /* Safari */
+    height: auto;
+    max-width: 140px;
 }
 
 .team-container img:hover {
