@@ -30,18 +30,28 @@ $(function() {
 
     $('[data-toggle="tooltip"]').tooltip();
 
-    $('select')
-        .select2({
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        $('select') .select2({
+            placeholder: "Select a state",
+            allowClear: true,
+            width: '170px',
+            minimumResultsForSearch: Infinity
+        });
+    } else {
+        $('select').select2({
             placeholder: "Select a state",
             allowClear: true,
             width: '170px'
-        })
-        .change(function(e){
+        });
+    }
+
+    $('select').change(function (e) {
             var $target = $(e.target);
             var $img = $target.parents('.row:first').find('img');
 
             $img.attr('src', $target.children('option:selected').data('photo'));
         });
+
 
     $('.event-list>li').click(function(e){
         var $target = $(this);
