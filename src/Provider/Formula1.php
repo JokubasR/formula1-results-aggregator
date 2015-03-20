@@ -238,18 +238,19 @@ class Formula1 extends BaseProvider
 
             $results = [];
 
-            foreach ($rows as $row) {
+            foreach ($rows as $position => $row) {
                 /**@var \DomElement $row */
 
                 $pilot = trim($row->getElementsByTagName('td')->item(1)->textContent);
                 $team = $row->getElementsByTagName('td')->item(2)->textContent;
 
                 $results[$this->hash($pilot)] = [
-                    'position' => $row->getElementsByTagName('td')->item(0)->textContent,
+//                    'position' => $row->getElementsByTagName('td')->item(0)->textContent,
+                    'position' => $position + 1,
                     'pilot'    => $pilot,
                     'hash'     => $this->hash($pilot),
                     'team'     => $team,
-                    'engine'   => $this->getTeamEngine($team),
+                    'engine'   => $this->getEngineByTeam($team),
                 ];
             }
 
@@ -277,7 +278,7 @@ class Formula1 extends BaseProvider
 
             $results = [];
 
-            foreach ($rows as $row) {
+            foreach ($rows as $position => $row) {
                 /**@var \DomElement $row */
 
                 $pilotNameBlock = $row->getElementsByTagName('td')->item(1);
@@ -286,11 +287,12 @@ class Formula1 extends BaseProvider
                 $team = trim($row->getElementsByTagName('td')->item(3)->textContent);
 
                 $results[$this->hash($pilot)] = [
-                    'position' => trim($row->getElementsByTagName('td')->item(0)->textContent),
+//                    'position' => trim($row->getElementsByTagName('td')->item(0)->textContent),
+                    'position' => $position + 1,
                     'pilot'    => $pilot,
                     'hash'     => $this->hash($pilot),
                     'team'     => $team,
-                    'engine'   => $this->getTeamEngine($team),
+                    'engine'   => $this->getEngineByTeam($team),
                 ];
             }
 
@@ -436,10 +438,10 @@ class Formula1 extends BaseProvider
      *
      * @return bool
      */
-    protected function getTeamEngine($team)
+    protected function getEngineByTeam($team)
     {
-        return !empty($this->engines[$team])
-            ? $this->engines[$team]
+        return !empty($this->teams[$team])
+            ? $this->engines[$this->teams[$team]['engine']]
             : false
         ;
     }
