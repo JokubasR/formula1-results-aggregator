@@ -341,6 +341,10 @@ class Formula1 extends BaseProvider
         $figures->each(function (Crawler $item, $key) {
             $pilot = trim($item->filterXPath('//h1')->first()->text());
 
+            if ($pilot === "Kimi Räikkönen") {
+                $pilot = "Kimi Raikkonen";
+            }
+
             $this->drivers[$this->hash($pilot)] = [
                 'number'   => $item->filterXPath('//figcaption/div[@class="driver-number"]/span')->first()->text(),
                 'fullname' => $pilot,
@@ -388,7 +392,7 @@ class Formula1 extends BaseProvider
 //                'photo'  => self::HOST_URL.'/etc/designs/fom-website/images/driver-standings/default.gif',
                 'photo'  => self::HOST_URL.'/content/fom-website/en/championship/teams/Sauber/_jcr_content/logo.img.png/1424036712372.png',
             ],
-            'Red Bull'    => [
+            'Red Bull Racing'    => [
                 'title'  => 'Red Bull',
                 'engine' => 'Renault',
 //                'photo'  => self::HOST_URL.'/content/fom-website/en/championship/teams/Red-Bull/_jcr_content/teamCar.img.jpg',
