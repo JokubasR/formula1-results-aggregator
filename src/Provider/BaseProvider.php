@@ -17,14 +17,18 @@ abstract class BaseProvider
     /**
      * @param $url
      *
-     * @return \Symfony\Component\DomCrawler\Crawler
+     * @return bool|Crawler
      */
     protected function getData($url)
     {
         $content = $this->fetchData($url);
-        $crawler = $this->getDomCrawler($content);
+        if (false !== $content) {
+            $crawler = $this->getDomCrawler($content);
 
-        return $crawler;
+            return $crawler;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -42,11 +46,16 @@ abstract class BaseProvider
     /**
      * @param $url
      *
-     * @return string HTML document
+     * @return bool|string HTML document
      */
     protected function fetchData($url)
     {
-        $content = file_get_contents($url);
+        try {
+            $content = file_get_contents($url);
+        }
+        catch (\Exception $ex) {
+            return false;
+        }
 
         return $content;
     }

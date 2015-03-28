@@ -1,4 +1,4 @@
-<span class="pull-right label label-info">{{ result.total }} total</span>
+<span class="pull-right label label-info">{{ result.total|default(0) }} total</span>
 <h3 class="text-uppercase">Results</h3>
 {% if result is not empty %}
 

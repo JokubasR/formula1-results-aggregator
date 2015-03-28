@@ -130,11 +130,11 @@ class Formula1 extends BaseProvider
     {
         $cacheResults = $this->cacheClient->get(self::CACHE_KEY_GRAND_PRIX_RESULT_URLS);
 
-        if (false === $cacheResults) {
+//        if (false === $cacheResults) {
             $this->fetchGrandPrixResultURLs();
-        } else {
-            $this->races = $cacheResults;
-        }
+//        } else {
+//            $this->races = $cacheResults;
+//        }
 
         return $this->races;
     }
@@ -166,60 +166,68 @@ class Formula1 extends BaseProvider
     {
         $crawler = $this->getData($this->getBaseResultsUrl().self::RACE_RESULTS_URL);
 
-        $grandPrix = $crawler->filterXPath('//div[@class="group article-columns"]');
+        if (false !== $crawler) {
+            $grandPrix = $crawler->filterXPath('//div[@class="group article-columns"]/a[@class="column column-4"]');
 
-        $this->races = [];
+            $this->races = [];
 
-        $grandPrix->each(function (Crawler $race, $key) {
-            $title = $race->filterXPath('//h4')->text();
+            $grandPrix->each(function (Crawler $race, $key) {
+                $title = $race->filterXPath('//h4')->text();
 
-            $this->addRaceInfo([
-                'url'   => $race->filterXPath('//a/@href')->text(),
-                'title' => $title,
-                'slug'  => strtolower(str_replace(' ', '-', $title)),
-                'photo' => $race->filterXPath('//img[@class="hidden"]/@src')->text(),
-            ]);
-        });
+                $this->addRaceInfo([
+                    'url'   => $race->filterXPath('//a/@href')->text(),
+                    'title' => $title,
+                    'slug'  => strtolower(str_replace(' ', '-', $title)),
+                    'photo' => $race->filterXPath('//img[@class="hidden"]/@src')->text(),
+                ]);
+            });
 
-        if (!empty($this->races)) {
-            $this->cacheClient->set(self::CACHE_KEY_GRAND_PRIX_RESULT_URLS, $this->races, 172800 /*2 days*/);
+            if (!empty($this->races)) {
+                $this->cacheClient->set(self::CACHE_KEY_GRAND_PRIX_RESULT_URLS, $this->races, 172800 /*2 days*/);
+            }
         }
+
+        return false;
     }
 
     /**
-     * @return array
+     * @return bool
      */
     public function fetchGrandPrix()
     {
         $crawler = $this->getData($this->getRacesUrl());
 
-        $grandPrix = $crawler->filterXPath('//article[contains(@class, "fom-teaser")]');
+        if (false !== $crawler) {
+            $grandPrix = $crawler->filterXPath('//article[contains(@class, "fom-teaser")]');
 
-        $this->racesInfo = [];
+            $this->racesInfo = [];
 
-        $grandPrix->each(function (Crawler $race, $key) {
-            $title = $race->filterXPath('//section/h4')->text();
-            $slug = strtolower(str_replace(' ', '-', $title));
-            $photo = $race->filterXPath('//img[@class="hidden"]/@src')->text();
-            $date = explode('-', trim($race->filterXPath('//section/p[@class="teaser-date"]')->text()));
-            $dateString = sprintf('%s-%s', trim(str_replace(' ', null, $date[0]), " \t\n\r\0\x0BOct"), trim($date[1]));
+            $grandPrix->each(function (Crawler $race, $key) {
+                $title = $race->filterXPath('//section/h4')->text();
+                $slug = strtolower(str_replace(' ', '-', $title));
+                $photo = $race->filterXPath('//img[@class="hidden"]/@src')->text();
+                $date = explode('-', trim($race->filterXPath('//section/p[@class="teaser-date"]')->text()));
+                $dateString = sprintf('%s-%s', trim(str_replace(' ', null, $date[0]), " \t\n\r\0\x0BOct"), trim($date[1]));
 
-            $hash = $this->hash($slug);
+                $hash = $this->hash($slug);
 
-            $this->racesInfo[$hash] = [
-                'title' => $title,
-                'shortName' => str_replace('2015 FORMULA 1 ', null, $title),
-                'slug'  => $slug,
-                'photo' => self::HOST_URL.$photo,
-                'fullSizePhoto' => self::HOST_URL.str_replace('img.320', 'img.1024', $photo),
-                'date' => $dateString,
-                'hash' => $hash,
-            ];
-        });
+                $this->racesInfo[$hash] = [
+                    'title' => $title,
+                    'shortName' => str_replace('2015 FORMULA 1 ', null, $title),
+                    'slug'  => $slug,
+                    'photo' => self::HOST_URL.$photo,
+                    'fullSizePhoto' => self::HOST_URL.str_replace('img.320', 'img.1024', $photo),
+                    'date' => $dateString,
+                    'hash' => $hash,
+                ];
+            });
 
-        if (!empty($this->racesInfo)) {
-            $this->cacheClient->set(self::CACHE_KEY_GRAND_PRIX, $this->racesInfo, 2592000 /*30 days*/);
+            if (!empty($this->racesInfo)) {
+                $this->cacheClient->set(self::CACHE_KEY_GRAND_PRIX, $this->racesInfo, 2592000 /*30 days*/);
+            }
         }
+
+        return false;
     }
 
     /**
@@ -234,29 +242,40 @@ class Formula1 extends BaseProvider
         if (false === $results) {
             $crawler = $this->getData($this->getQualifyingResultUrl($stage));
 
-            $rows = $crawler->filterXPath('//tr[position() != last()][position() != 1]');
+            if (false !== $crawler) {
 
-            $results = [];
+                $rows = $crawler->filterXPath('//tr[position() != last()][position() != 1]');
 
-            foreach ($rows as $position => $row) {
-                /**@var \DomElement $row */
+                $results = [];
 
-                $pilot = trim($row->getElementsByTagName('td')->item(1)->textContent);
-                $team = $row->getElementsByTagName('td')->item(2)->textContent;
+                foreach ($rows as $position => $row) {
+                    /**@var \DomElement $row */
 
-                $results[$this->hash($pilot)] = [
-//                    'position' => $row->getElementsByTagName('td')->item(0)->textContent,
-                    'position' => $position + 1,
-                    'pilot'    => $pilot,
-                    'hash'     => $this->hash($pilot),
-                    'team'     => $team,
-                    'engine'   => $this->getEngineByTeam($team),
-                ];
+                    if (strlen($row->getElementsByTagName('td')->item(1)->textContent) <= 2) {
+                        $pilot = trim($row->getElementsByTagName('td')->item(2)->textContent);
+                        $team = $row->getElementsByTagName('td')->item(3)->textContent;
+                    } else {
+                        $pilot = trim($row->getElementsByTagName('td')->item(1)->textContent);
+                        $team  = $row->getElementsByTagName('td')->item(2)->textContent;
+                    }
+
+                    $results[$this->hash($pilot)] = [
+    //                    'position' => $row->getElementsByTagName('td')->item(0)->textContent,
+                        'position' => $position + 1,
+                        'pilot'    => $pilot,
+                        'hash'     => $this->hash($pilot),
+                        'team'     => $team,
+                        'engine'   => $this->getEngineByTeam($team),
+                    ];
+                }
+
+                if (!empty($results)) {
+                    $this->cacheClient->set(self::CACHE_KEY_QUALIFYING_RESULTS.$stage['url'], $results, 120 /*2 minutes*/);
+                }
+            } else {
+                return false;
             }
 
-            if (!empty($results)) {
-                $this->cacheClient->set(self::CACHE_KEY_QUALIFYING_RESULTS.$stage['url'], $results, 120 /*2 minutes*/);
-            }
         }
 
         return $results;
@@ -265,7 +284,7 @@ class Formula1 extends BaseProvider
     /**
      * @param array $stage
      *
-     * @return array
+     * @return array|bool|mixed
      */
     public function fetchGrandPrixRaceResult(array $stage)
     {
@@ -274,30 +293,34 @@ class Formula1 extends BaseProvider
         if (false === $results) {
             $crawler = $this->getData($this->getRaceResultUrl($stage));
 
-            $rows = $crawler->filterXPath('//tr[position() != 1]');
+            if (false !== $crawler) {
+                $rows = $crawler->filterXPath('//tr[position() != 1]');
 
-            $results = [];
+                $results = [];
 
-            foreach ($rows as $position => $row) {
-                /**@var \DomElement $row */
+                foreach ($rows as $position => $row) {
+                    /**@var \DomElement $row */
 
-                $pilotNameBlock = $row->getElementsByTagName('td')->item(1);
+                    $pilotNameBlock = $row->getElementsByTagName('td')->item(1);
 
-                $pilot = trim($pilotNameBlock->childNodes->item(1)->textContent.$pilotNameBlock->childNodes->item(3)->textContent);
-                $team = trim($row->getElementsByTagName('td')->item(3)->textContent);
+                    $pilot = trim($pilotNameBlock->childNodes->item(1)->textContent.$pilotNameBlock->childNodes->item(3)->textContent);
+                    $team = trim($row->getElementsByTagName('td')->item(3)->textContent);
 
-                $results[$this->hash($pilot)] = [
-//                    'position' => trim($row->getElementsByTagName('td')->item(0)->textContent),
-                    'position' => $position + 1,
-                    'pilot'    => $pilot,
-                    'hash'     => $this->hash($pilot),
-                    'team'     => $team,
-                    'engine'   => $this->getEngineByTeam($team),
-                ];
-            }
+                    $results[$this->hash($pilot)] = [
+    //                    'position' => trim($row->getElementsByTagName('td')->item(0)->textContent),
+                        'position' => $position + 1,
+                        'pilot'    => $pilot,
+                        'hash'     => $this->hash($pilot),
+                        'team'     => $team,
+                        'engine'   => $this->getEngineByTeam($team),
+                    ];
+                }
 
-            if (!empty($results)) {
-                $this->cacheClient->set(self::CACHE_KEY_RACE_RESULTS.$stage['url'], $results, 120 /*2 minutes*/);
+                if (!empty($results)) {
+                    $this->cacheClient->set(self::CACHE_KEY_RACE_RESULTS.$stage['url'], $results, 120 /*2 minutes*/);
+                }
+            } else {
+                return false;
             }
         }
 
